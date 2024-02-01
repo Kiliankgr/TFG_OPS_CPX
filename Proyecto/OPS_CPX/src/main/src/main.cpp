@@ -72,7 +72,7 @@ int main(int argc, char **argv)
         const int id = atoi(argv[4]) - 1;*/
 
         const string sta_file("tmp.txt");
-        const string ins_file("/home/riera/Dropbox/Trabajos_en_curso/OPS/OPS_CPX/test_ins.txt");
+        const string ins_file("/home/kilian/Escritorio/TFG/Proyecto/OPS_CPX/test_ins.txt");
         const string log_file("test_log.txt");
         const int id = 0;
 
