@@ -1,0 +1,11 @@
+-- Ruta Instalacion de la librería 
+/home/kilian/Escritorio/TFG/Proyecto/ibm/ILOG/CPLEX_Studio2211
+
+
+Si desea utilizar los motores de CPLEX o CP Optimizer a través de sus API de 
+Python, debe indicarle a Python dónde encontrarlas.  Para ello, escriba el 
+siguiente mandato en un terminal:<<<<<<
+python 
+/home/kilian/Escritorio/TFG/Proyecto/ibm/ILOG/CPLEX_Studio2211/python/setup.py
+install>>>>>>
+

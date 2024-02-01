@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsolver.a CMakeFiles/solver.dir/src/OPS_bc1.cpp.o
+/usr/bin/ranlib libsolver.a
