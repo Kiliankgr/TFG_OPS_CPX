@@ -52,9 +52,50 @@ int processor(const string &ins_file,
 int main(int argc, char **argv)
 {
     int exit_code = 0;
+    
+    if (argc == 1) {
+        cout << "Ejecucion rapida, eliminar en el futuro o corregir";
+        const string sta_file("/home/kilian/Escritorio/TFG/Proyecto/OPS_CPX/tmp.txt");
+        const string ins_file("/home/kilian/Escritorio/TFG/Proyecto/OPS_CPX/test_ins.txt");
+        const string log_file("/home/kilian/Escritorio/TFG/Proyecto/OPS_CPX/test_log.txt");
+        const int id = 0;
+
+        exit_code = processor(ins_file,
+                              sta_file,
+                              log_file,
+                              id);
+        return exit_code;
+    }
+    if (argv[1] == "-h") {
+        cout << "Para la correcta ejecución del programa debera de ser tal que \"emir_cpx <temp_file> <instace_file> <output_log_file>\" donde:\n"<<
+                    " \"temp_file\": Fichero temporal el cual se usará para ciertos cálculos\n" <<
+                    " \"instace_file\": Fichero con la instancia del problema\n" <<
+                    " \"output_log_file\": Fichero de salida con el resultado\n";
+        return exit_code;
+    }
+    
+
+    if (argc >= 4) {
+        /*
+         *  argv[1]       Target file
+         *  argv[2]       Instance file
+         *  argv[3]       Output log file
+         */
+        const string sta_file(argv[1]);
+        const string ins_file(argv[2]);
+        const string log_file(argv[3]);
+        
+        const int id = 0;
+
+        exit_code = processor(ins_file,
+                              sta_file,
+                              log_file,
+                              id);
+        return exit_code;
+    }
 
     /*if (argc == 7)
-    {*/
+    {
 
         /*
          *  argv[1]       Target file
@@ -69,18 +110,19 @@ int main(int argc, char **argv)
         const string ins_file(argv[2]);
         const string log_file(argv[3]);
         
-        const int id = atoi(argv[4]) - 1;*/
+        const int id = atoi(argv[4]) - 1;
 
         const string sta_file("tmp.txt");
         const string ins_file("/home/kilian/Escritorio/TFG/Proyecto/OPS_CPX/test_ins.txt");
         const string log_file("test_log.txt");
+
         const int id = 0;
 
         exit_code = processor(ins_file,
                               sta_file,
                               log_file,
                               id);
-    /*}*/
+    }*/
 
     return exit_code;
 }
