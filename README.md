@@ -20,7 +20,7 @@ El desarrollo de la web será realizado mediante el uso de **Flask** un framewor
 Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 ### Instalación realizada de PyMongo
 * MongoDB Atlas cluster [tutorial](https://www.mongodb.com/docs/atlas/getting-started/?_ga=2.90501273.2090826799.1716903787-609048103.1716903786&_gac=1.217694626.1716903787.EAIaIQobChMI7Yba-rywhgMVmKloCR0ckgIpEAAYASAAEgLMrPD_BwE)
-* **python3 -m pip install 'fastapi[all]' pymongo python-dotenv**
+* **python3 -m pip install python-dotenv Flask-PyMongo Flask-PyMongo pymongo[srv]**
 
 ## Notas 
 * Actualmente está testeado con el fichero ubicado en "/home/kilian/Escritorio/TFG/Proyecto/OPS_CPX/test_ins.txt" se modificará a posteriori para pasarlo por argumentos

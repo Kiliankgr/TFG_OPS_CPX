@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h3> Empezamos con los modelos (quitar luego) </h3>
+  <div>
+    <form action="" method="POST">
+        {{ form_add_modelo.csrf_token() }} <!---necesario si se añadio contraseña--->
+        <fieldset class="form-group">
+            <legend>Añadir modelo</legend>
+
+            <div class="form-group">
+              {{ form_add_modelo.nombre(class="form-control form-control") }}                
+              {{ form_add_modelo.nombre.label(class="formcontrol-label") }}
+            </div>
+
+            <div class="form-group">
+              {{ form_add_modelo.contenido.label(class="formcontrol-label") }}
+              {{ form_add_modelo.contenido(class="form-control form-control") }}                
+            </div>
+            
+
+            <div class="form-group">
+                {{ form_add_modelo.confirmar_btn(class="btn btn-outline-info") }}
+            </div>
+        </fieldset>
+      </form>
+  </div>
+    {% for post in posts %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date_posted }}</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
