@@ -1,5 +1,5 @@
 from application import app, db
-from flask import render_template,flash, request
+from flask import render_template,flash, request, redirect
 from .forms import Add_Modelo_Form
 
 
@@ -29,9 +29,24 @@ def mostrar_modelos():
     #for instancia in db.Instancias.find()
     return render_template('modelos.html', methods=["GET", "POST"], form_add_modelo = form_add_modelo)
 
+
 # Prueba para comprobar que podemos añadir elementos a la base de datos
-@app.route("/add_modelos")
+@app.route("/add_modelos", methods=["GET", "POST"])
 def add_modelos():
-    form_add_modelo = Add_Modelo_Form()
-    #for instancia in db.Instancias.find()
-    return render_template('add_modelos.html', methods=["GET", "POST"], form_add_modelo = form_add_modelo)
+
+    if request.method == "POST":
+        form_add_modelo = Add_Modelo_Form(request.form)
+        add_modelo_nombre = form_add_modelo.nombre.data
+        add_modelo_contenido = form_add_modelo.contenido.data
+        
+        #pymongo flask, insertamos en la coleccion Instancias
+        db.Instancias.insert_one({
+            "nombre" : add_modelo_nombre, # por lo visto
+            "contenido" : add_modelo_contenido
+        })
+        #Mensaje al usuario
+        flash("Instancia añadida correctamente", "success")
+        return redirect("/")
+    else:
+        form_add_modelo = Add_Modelo_Form()
+    return render_template('add_modelos.html', form_add_modelo = form_add_modelo) 
