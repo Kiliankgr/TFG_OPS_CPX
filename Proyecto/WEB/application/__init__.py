@@ -17,7 +17,7 @@ app.config["MONGO_URI"] = "mongodb+srv://kilian:00brinco@cluster0.0kmenyr.mongod
 #probando otra manera Esta funciona seguro
 client = MongoClient(app.config["MONGO_URI"], server_api=ServerApi('1'))
 db = client["Modelos"]
-
+ 
 
 
 for coll in db.list_collection_names():
