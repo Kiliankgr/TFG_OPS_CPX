@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block content %}
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Lista Interactiva</title>
+      <!-- Bootstrap CSS -->
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Pre 
+      {% for instancia in instancias %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ instancia._id }}</a>
+              <small class="text-muted">Algo1</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ instancia.nombre }}</a></h2>
+            <p class="article-content">{{instancia.contenido}}</p>
+          </div>
+        </article>
+    {% endfor %}
+    -->
+  <div class="container mt-5">
+      <h2 class="mb-4">Instancias</h2>
+      <ul class="list-group">
+          {% for instancia in instancias %}
+            <article class="media content-section">
+              <div class="media-body">
+                <div class="article-metadata">
+                  <a class="mr-2" href="#">{{ instancia._id }}</a>
+                  <small class="text-muted">Algo1</small>
+                </div>
+                <h2><a class="article-title" onclick="elementoClicado('Elemento 1')">{{ instancia.nombre }}</a></h2>
+              </div>
+            </article>
+            <!-- Mostrarlo como botones, plantearse luego como queremos que se muestre la lista de instancias
+            <li class="list-group-item">
+                <button class="btn btn-primary btn-block" onclick="elementoClicado('Elemento 1')">{{ instancia.nombre }}</button>
+            </li>
+            -->
+          {% endfor %}
+      </ul>
+  </div>
+
+  <script>
+      function elementoClicado(elemento) {
+          alert(elemento + ' clicado');
+      }
+  </script>
+
+  </body>
+  </html>
+{% endblock content %}
