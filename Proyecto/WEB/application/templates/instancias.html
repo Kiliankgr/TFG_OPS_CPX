@@ -5,7 +5,7 @@
 <div class="container mt-5">
     <h2 class="mb-4">Instancias</h2>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-4">
             <ul class="list-group">
                 {% for instancia in instancias %}
                     <article class="media content-section">
@@ -20,15 +20,25 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="content-section">
                 <h3>Contenido</h3>
                 <p class='text-muted'>Mostraremos el contenido permitiendo modificarlo, aprovecharemos un nuevo forms</p>
+
+
                 <ul class="list-group">
                     <li class="list-group-item list-group-item-light">Latest Posts</li>
                 </ul>
             </div>
         </div>
+        <div class="col-md-2">
+          <ul class="list-group">
+              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Crear una nueva entrada">Nueva</button>
+              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Probar la funcionalidad">Probar</button>
+              <button type="button" class="btn btn-danger mb-2" data-bs-toggle="tooltip" title="Eliminar una entrada">Eliminar</button>
+              <button type="button" class="btn btn-warning mb-2" data-bs-toggle="tooltip" title="Modificar una entrada">Modificar</button>
+          </ul>
+      </div>
     </div>
 </div>
 

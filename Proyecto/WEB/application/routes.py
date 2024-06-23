@@ -7,7 +7,7 @@ import time
 import json
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def home():
     return render_template('home.html')  #TO DO cambiar post
 
@@ -16,7 +16,7 @@ def home():
 
 def mostrar_instancias():
     instancias = []
-    for instancia in db.Instancias.find().sort("nombre" ):
+    for instancia in db.Instancias.find().sort("nombre"):
         instancia["_id"] = str(instancia["_id"])
         instancia["nombre"] = str(instancia["nombre"])
         instancia["contenido"] = instancia["contenido"]
