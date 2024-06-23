@@ -3,6 +3,10 @@ from wtforms import StringField, TextAreaField, SelectField, SubmitField
 from wtforms.validators import DataRequired
 
 class Add_Instancia_Form(FlaskForm):
-    nombre = StringField('Nombre fichero', validators=[DataRequired()])
-    contenido = TextAreaField('Contenido',validators=[DataRequired()])    
+    nombre = StringField('Nombre', validators=[DataRequired()],
+                         render_kw={"title": "Nombre de la instancia, no es necesario añadir extensión"}
+                         )
+    contenido = TextAreaField('Contenido',validators=[DataRequired()],
+                              render_kw={"title": "Introduzca aquí el contenido de la instancia en formato JSON"}
+                              )    
     confirmar_btn = SubmitField("Confirmar")

@@ -7,7 +7,7 @@ import time
 import json
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
     return render_template('home.html')  #TO DO cambiar post
 
