@@ -1,58 +1,76 @@
 {% extends "layout.html" %}
 {% block content %}
-
+<!-- Evitamos que se muestre radio pero manteniendo la funcionalidad (hovering del elemento seleccionado) -->
+<style>
+  input[type="radio"] {
+      display: none;
+  }
+</style>
 
 <div class="container mt-5">
     <h2 class="mb-4">Instancias</h2>
     <div class="row">
         <div class="col-md-4">
-            <ul class="list-group">
-                {% for instancia in instancias %}
-                    <article class="media content-section">
-                        <div class="media-body">
-                            <div class="article-metadata">
-                                <a class="mr-2" href="#">{{ instancia._id }}</a>
-                                <small class="text-muted">Algo1</small>
-                            </div>
-                            <h2><a class="article-title" onclick="elementoClicado('Elemento 1')">{{ instancia.nombre }}</a></h2>
-                        </div>
-                    </article>
-                {% endfor %}
+          <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
+            <ul class="list-group" style="width:100%">
+              {% for instancia in instancias %}
+                <!--Transformamos el diccionario de la instancia a JSON, <ignorar aviso de error>-->
+                <article class="btn btn-info active mb-2" id="instancia_elemento" onclick='seleccionarInstancia({{ instancia | tojson | safe }})'>
+                  <input type="radio" name="options" autocomplete="off">
+                  <div class="media-body">
+                    <div class="article-metadata">                              
+                      <small class="text-light">{{ instancia.fecha }}</small>
+                    </div>
+                    <h2><a class="article-title">{{ instancia.nombre }}</a></h2>
+                  </div>
+                </article>
+              {% endfor %}
             </ul>
+          </div>
         </div>
+        <!-- Sección de Contenido de la Instancia -->
         <div class="col-md-6">
             <div class="content-section">
-                <h3>Contenido</h3>
-                <p class='text-muted'>Mostraremos el contenido permitiendo modificarlo, aprovecharemos un nuevo forms</p>
-
-
-                <ul class="list-group">
-                    <li class="list-group-item list-group-item-light">Latest Posts</li>
-                </ul>
+                <h3 id="nombre_instancia">Nombre</h3>
+                
+                <form action="" method="POST">
+                  {{ form_mod_instancia.csrf_token() }}
+                  <fieldset class="form-group">
+                    <div class="form-group">
+                      {{ form_mod_instancia.contenido.label(class="formcontrol-label") }}
+                      {{ form_mod_instancia.contenido(id="contenido_instancia", class="form-control form-control") }}
+                    </div>
+                    <div class="form-group">
+                      {{ form_mod_instancia.modificar_btn(class="btn btn-outline-info") }}
+                    </div>
+                  </fieldset>
+                </form>
             </div>
         </div>
+        <!-- Botones -->
         <div class="col-md-2">
           <ul class="list-group">
-              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Crear una nueva entrada">Nueva</button>
-              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Probar la funcionalidad">Probar</button>
-              <button type="button" class="btn btn-danger mb-2" data-bs-toggle="tooltip" title="Eliminar una entrada">Eliminar</button>
-              <button type="button" class="btn btn-warning mb-2" data-bs-toggle="tooltip" title="Modificar una entrada">Modificar</button>
+              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia">Nueva</button>
+              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Probar la instancia con el modelo">Probar</button>
+              <button type="button" class="btn btn-danger mb-2" data-bs-toggle="tooltip" title="Eliminar la instancia">Eliminar</button>
           </ul>
       </div>
     </div>
 </div>
 
-<script>
-    function elementoClicado(elemento) {
-        alert(elemento + ' clicado');
-    }
+<!-- Pasar la variable 'instancias' al cliente como JSON -->
+<script type="text/javascript">
+  function seleccionarInstancia(instancia) {
+    // Actualizar el contenido del formulario
+    document.getElementById("nombre_instancia").textContent = instancia.nombre;
+    document.getElementById("contenido_instancia").value = JSON.stringify(instancia.contenido, null, 2); 
+  }
 </script>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 
 </html>
 {% endblock content %}

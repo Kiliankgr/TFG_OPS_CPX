@@ -16,5 +16,5 @@ class Mod_Instancia_Form(FlaskForm):
     contenido = TextAreaField('Contenido',validators=[DataRequired()],
                               render_kw={"title": "Introduzca aquí el contenido de la instancia en formato JSON"}
                               )    
-    confirmar_btn = SubmitField("Modificar", 
+    modificar_btn = SubmitField("Modificar", 
                                 render_kw={"title": "Se modificará el contenido dela instancia en cuestión"})
