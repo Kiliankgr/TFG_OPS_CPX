@@ -30,32 +30,35 @@ def mostrar_instancias():
 
     # Modificar Instancias
     form_mod_instancia = Mod_Instancia_Form()
-    if request.method == "POST":
-        
+    if request.method == "POST":        
         form_mod_instancia = Mod_Instancia_Form(request.form)
-        modificar_instancia(id, form_mod_instancia)
+        #necesitamos el id por ahora se me ocurre que se añada al form y que esté en oculto
+        modificar_instancia(form_mod_instancia)
         
     return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia)
 
-def modificar_instancia(id, form_mod_instancia):
+def modificar_instancia(form_mod_instancia):
+    print(str(form_mod_instancia.identificador))
+    identificador = form_mod_instancia.identificador.data
+    print("ID: " + identificador)
     mod_instancia_contenido = form_mod_instancia.contenido.data
     print("modificar instancia")
+    print(mod_instancia_contenido)
         #Pasamos a Json el contenido
     try:
         contenido_json = json.loads(mod_instancia_contenido)
         fecha_actual = time.strftime('%Y-%m-%d_%H:%M:%S')   
-        nombre_nuevo = db.Instancias.find({"_id": id}).nombre
+        #instancia = db.Instancias.find({"_id": identificador})
 
-        print("Nombre: " + nombre_nuevo)
+        
         #pymongo flask, modificamos en la coleccion Instancias
         #ya que se modifica el contenido la fecha y el nombre se actualizarán
-        '''
-        db.Instancias.find_one_and_update({"_id": ObjectId(id)}, {"$set": {
+        
+        db.Instancias.find_one_and_update({"_id": ObjectId(identificador)}, {"$set": {
             "contenido": contenido_json,
-            "nombre_fichero" : add_instancia_nombre + "_" + fecha_actual,
             "fecha" : fecha_actual,
         }})
-        '''
+        
         #Mensaje al usuario
         flash("Instancia modificada correctamente", "success") # No veo que se muestre el mensaje revisar
     except json.JSONDecodeError as e:
@@ -84,7 +87,6 @@ def add_instancias():
             #pymongo flask, insertamos en la coleccion Instancias
             db.Instancias.insert_one({
                 "nombre" : add_instancia_nombre, 
-                "nombre_fichero" : add_instancia_nombre + "_" + fecha_actual,
                 "fecha" : fecha_actual,
                 "contenido" : contenido_json
             })

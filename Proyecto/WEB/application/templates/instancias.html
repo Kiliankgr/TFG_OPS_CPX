@@ -36,12 +36,15 @@
                 <form action="" method="POST">
                   {{ form_mod_instancia.csrf_token() }}
                   <fieldset class="form-group">
-                    <div class="form-group">
+                    <div class="form-group" style="height:100%;">
                       {{ form_mod_instancia.contenido.label(class="formcontrol-label") }}
-                      {{ form_mod_instancia.contenido(id="contenido_instancia", class="form-control form-control") }}
+                      {{ form_mod_instancia.contenido(id="contenido_instancia", style="height:80%", class="form-control form-control") }}
                     </div>
                     <div class="form-group">
                       {{ form_mod_instancia.modificar_btn(class="btn btn-outline-info") }}
+                    </div>
+                    <div class="form-group">
+                      {{ form_mod_instancia.identificador(id="identificador_seleccionado", class="d-none")}}
                     </div>
                   </fieldset>
                 </form>
@@ -62,8 +65,11 @@
 <script type="text/javascript">
   function seleccionarInstancia(instancia) {
     // Actualizar el contenido del formulario
+    document.getElementById("identificador_seleccionado").value = instancia._id; 
     document.getElementById("nombre_instancia").textContent = instancia.nombre;
     document.getElementById("contenido_instancia").value = JSON.stringify(instancia.contenido, null, 2); 
+    
+    
   }
 </script>
 
