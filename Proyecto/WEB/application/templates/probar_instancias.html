@@ -60,9 +60,36 @@
         <div class="col-md-2">
           <ul class="list-group">
               <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia">Nueva</button>
-              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Probar la instancia con el modelo">Probar</button>
+              <button type="button" class="btn btn-primary mb-2" id="probar_btn" data-bs-toggle="tooltip" title="Probar la instancia con el modelo">Probar</button>
               <button type="button" class="btn btn-danger mb-2" data-bs-toggle="tooltip" title="Eliminar la instancia">Eliminar</button>
           </ul>
+        </div>
+    </div>
+    <div class="row mt-5" >
+      <!--Modelo-->
+      <div class="col-md-10">
+        <div class="content-section">
+          <h3 class="mb-4">Resultados del modelo</h3>  
+          <form action="" method="POST">
+            {{ form_instancia_modelo.csrf_token() }}
+            <fieldset class="form-group">
+              <div class="form-group" style="height:100%;">
+                {{ form_instancia_modelo.contenido.label(class="formcontrol-label") }}
+                {{ form_instancia_modelo.contenido(id="contenido_instancia", class="form-control form-control", readonly=true) }}
+              </div>
+              <div class="form-group">
+                {{ form_instancia_modelo.guardar_btn(class="btn btn-outline-info") }}
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <!--Botones del modelo-->
+      <div class="col-md-2">
+        <ul class="list-group">
+            <button type="button" class="btn btn-primary mb-2" id="descargar_btn" data-bs-toggle="tooltip" title="Se descargará el resultado del modelo">Descargar</button>
+            <button type="button" class="btn btn-primary mb-2" id="guardar_btn" data-bs-toggle="tooltip" title="Se guardará el resultado del modelo en la base de datos">Guardar</button>
+        </ul>
       </div>
     </div>
 </div>

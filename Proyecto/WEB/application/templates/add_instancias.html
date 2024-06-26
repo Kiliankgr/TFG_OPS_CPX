@@ -5,8 +5,18 @@
       <form action="" method="POST">
           {{ form_add_instancia.csrf_token() }} <!---necesario si se añadio contraseña--->
           <fieldset class="form-group">
-              <legend>Añadir instancia</legend>
-
+            <div class="row">
+                    <div class="col-md-4">
+                        <legend>Añadir instancia</legend>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFileLang" lang="es">
+                        <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
+                      </div>
+                    </div>
+            </div>
+              
               <div class="form-group">
                 {{ form_add_instancia.nombre.label(class="formcontrol-label") }}
                 {{ form_add_instancia.nombre(class="form-control form-control") }}                
@@ -28,12 +38,24 @@
         
       <!-- Esta atento al mensaje flash para informar del estado, embellecerlo luego-->
       {% for category, message in get_flashed_messages(with_categories=true) %}
-        <div class="flash {{ category }}">{{ message }}</div>
+        <script>
+          // De esta manera mostramos el mensaje como una alerta, para javascript hay que transformar el mensaje a un json y luego asegurar la inserción html
+          alert({{ message | tojson | safe }});
+        </script>
+        <!--Si lo quisieramos añadir como un simple texto de aviso abajo
+        <div class="row">
+          <div class="alert alert-info" role = "alert">
+            {{ message }}
+          </div>
+        </div>
+        -->
       {% endfor %}
-   <!-- Lo usaremos más tarde para avisar de que ya se ha creado y que quiere hacer luego-, ya vemos si lo uso->
+      
+   <!-- Lo usaremos más tarde para avisar de que ya se ha creado y que quiere hacer luego-, ya vemos si lo uso-->
     <script>
       function elementoCreado(nombre_elemento) {
           alert(nombre_elemento + ' añadido correctamente');
       }
     </script>
+
 {% endblock content %}

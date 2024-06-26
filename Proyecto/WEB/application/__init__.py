@@ -19,8 +19,8 @@ client = MongoClient(app.config["MONGO_URI"], server_api=ServerApi('1'))
 db = client["Modelos"]
   
 
-
+'''
 for coll in db.list_collection_names():
     print(coll)
-
+'''
 from application import routes
