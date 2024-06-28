@@ -61,7 +61,7 @@
           <ul class="list-group">
               <a type="button" href="/add_instancias" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</a>
               <form id="probar_modelo_form" method="POST" action="">
-                <input type="hidden" name="id_instancia_a_probar" value="2">
+                <input type="hidden" name="id_instancia_a_probar" id="id_instancia_a_probar" value="">
                 <button type="submit" class="btn btn-primary mb-2" style="width:100%;" name="probar_btn" id="probar_btn" data-bs-toggle="tooltip" title="Probar la instancia con el modelo">Probar</button>
               </form>
               <button type="button" class="btn btn-primary mb-2" id="descargar_btn" data-bs-toggle="tooltip" title="Se descargará el resultado la instancia">Descargar</button>
@@ -110,9 +110,13 @@
 <script type="text/javascript">
   function seleccionarInstancia(instancia) {
     // Actualizar el contenido del formulario
+    document.getElementById("id_instancia_a_probar").value = instancia._id; 
     document.getElementById("identificador_seleccionado").value = instancia._id; 
     document.getElementById("nombre_instancia").textContent = instancia.nombre;
     document.getElementById("contenido_instancia").value = JSON.stringify(instancia.contenido, null, 2); 
+    // modificamos el valor en caso de querer probar la instancia
+    
+    
   }
 </script>
 

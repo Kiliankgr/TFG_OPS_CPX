@@ -7,7 +7,10 @@ import subprocess
 import json 
 from bson import ObjectId
 
-
+RUTA_AL_MODELO = '../OPS_CPX/emir_cpx'
+RUTA_FICHERO_TMP = 'tmp.txt'
+RUTA_INSTANCIA_TMP = 'fichero_instancia_tmp.txt'
+RUTA_SALIDA_TMP = 'fichero_salida_tmp.txt'
 @app.route("/")
 def home():
     return render_template('home.html') 
@@ -41,9 +44,27 @@ def mostrar_instancias():
         if "probar_btn" in request.form :
             print("Se detectó el btn probar:")
             #Ejecutamos el modelo
+            #ins = db.Instancias.find({"_id": ObjectId(request.form.get("id_instancia_a_probar"))}).next()
+            #print(ins["contenido"])
+            
+            for instancia in instancias:
+                print("ID: " + instancia["_id"], )
+                if instancia["_id"] == request.form.get("id_instancia_a_probar"):
+                    #Creamos ficheros temporales
+                    f_tmp = open(RUTA_FICHERO_TMP, "w") #revisar si son nesesarios crearlo antes
+                    # Escribir el diccionario en un fichero
+                    with open(RUTA_INSTANCIA_TMP, 'w') as file:
+                        json.dump(instancia["contenido"], file, indent=2)
+                    f_salida = open(RUTA_SALIDA_TMP, "w") #revisar si son nesesarios crearlo antes
+                    f_tmp.close()
+                    f_salida.close()
+                    ejecutar_modelo(RUTA_AL_MODELO, RUTA_FICHERO_TMP, RUTA_INSTANCIA_TMP, RUTA_SALIDA_TMP)
+                    break
+            
             #Para ello deberemos por ahora de crear una serie de ficheros temporales para pasarles el contenido al modelo
 
             return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, resultado_ultimo_modelo = resultado_ultimo_modelo)
+        
         print("Vamos a modificar una instancia")        
         form_mod_instancia = Mod_Instancia_Form(request.form)
         #necesitamos el id por ahora se me ocurre que se añada al form y que esté en oculto
@@ -144,12 +165,18 @@ def probar_instancia():
     return render_template('probar_instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo)
 
 #Función que ejecutará el modelo
-def ejecutar_modelo(ruta_del_programa, instancia, *args):
-    #Creamos ficheros temporales
+def ejecutar_modelo(ruta_del_programa, *args):
+    print("Vamos a ejecutar el modelo")
+    #se la pasamos al modelo
+    
     
     try:
         # Ejecutar el programa con los argumentos dados
-        resultado = subprocess.run([ruta_del_programa, *args], check=True, capture_output=True, text=True)
+        #resultado = subprocess.run([ruta_del_programa, *args], check=True, capture_output=True, text=True)
+        #resultado = subprocess.run(["pwd"], shell=True, capture_output=True, text=True)
+        resultado = subprocess.run([ruta_del_programa, "-h"], shell=True, capture_output=True, text=True)
+        print("Argurmentos:" + str(resultado.args))
+        print(resultado.stdout)
         return resultado.stdout  # O puedes retornar resultado si quieres incluir stderr y más información
     except subprocess.CalledProcessError as e:
         # Manejar el error si el programa falla
