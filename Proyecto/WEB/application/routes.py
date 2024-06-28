@@ -3,7 +3,7 @@ from flask import render_template,flash, request, redirect
 from .forms import Add_Instancia_Form, Mod_Instancia_Form, Instancia_Modelo_Form
 from datetime import datetime
 import time
-
+import subprocess
 import json 
 from bson import ObjectId
 
@@ -15,7 +15,7 @@ def home():
 # Por ahora mostrará los instancias y permitirá modificar su contenido o añadir nuevos 
 @app.route("/mostrar_instancias", methods=["GET", "POST", "DELETE"])
 def mostrar_instancias():
-    
+    resultado_ultimo_modelo = ""
     #instancias = db.Instancias.find().sort("nombre")
     #instancias = [convert_objectid_to_str(instancia) for instancia in instancias]
   
@@ -28,14 +28,28 @@ def mostrar_instancias():
         instancia = convert_objectid_to_str(instancia)        
         instancias.append(instancia)
 
-    # Modificar Instancias
+    #Forms
     form_mod_instancia = Mod_Instancia_Form()
-    if request.method == "POST":        
+    form_instancia_modelo = Instancia_Modelo_Form()
+    # Modificar Instancias
+    if request.method == "POST":        #Nota revisar ya que probablemente si vamos a mantener los modelos con las instancia, el post deberá de detectar la solicitud si es de mod contenido instancia, o guardar modelo resultante
+        print("valores:")
+        print(request.form.values)
+        print("request value :")
+        print(request.form.get("id_instancia_a_probar"))        
+        #Diferenciamos las diferentes solicitudes post
+        if "probar_btn" in request.form :
+            print("Se detectó el btn probar:")
+            #Ejecutamos el modelo
+            #Para ello deberemos por ahora de crear una serie de ficheros temporales para pasarles el contenido al modelo
+
+            return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, resultado_ultimo_modelo = resultado_ultimo_modelo)
+        print("Vamos a modificar una instancia")        
         form_mod_instancia = Mod_Instancia_Form(request.form)
         #necesitamos el id por ahora se me ocurre que se añada al form y que esté en oculto
         modificar_instancia(form_mod_instancia)
         
-    return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia)
+    return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo,  resultado_ultimo_modelo = resultado_ultimo_modelo)
 
 def modificar_instancia(form_mod_instancia):
     print(str(form_mod_instancia.identificador))
@@ -128,3 +142,15 @@ def probar_instancia():
         modificar_instancia(form_mod_instancia)
         
     return render_template('probar_instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo)
+
+#Función que ejecutará el modelo
+def ejecutar_modelo(ruta_del_programa, instancia, *args):
+    #Creamos ficheros temporales
+    
+    try:
+        # Ejecutar el programa con los argumentos dados
+        resultado = subprocess.run([ruta_del_programa, *args], check=True, capture_output=True, text=True)
+        return resultado.stdout  # O puedes retornar resultado si quieres incluir stderr y más información
+    except subprocess.CalledProcessError as e:
+        # Manejar el error si el programa falla
+        return f"Error: {e}"

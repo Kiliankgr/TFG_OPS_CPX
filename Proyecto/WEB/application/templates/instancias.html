@@ -59,10 +59,49 @@
         <!-- Botones -->
         <div class="col-md-2">
           <ul class="list-group">
-              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia">Nueva</button>
-              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Probar la instancia con el modelo">Probar</button>
+              <a type="button" href="/add_instancias" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</a>
+              <form id="probar_modelo_form" method="POST" action="">
+                <input type="hidden" name="id_instancia_a_probar" value="2">
+                <button type="submit" class="btn btn-primary mb-2" style="width:100%;" name="probar_btn" id="probar_btn" data-bs-toggle="tooltip" title="Probar la instancia con el modelo">Probar</button>
+              </form>
+              <button type="button" class="btn btn-primary mb-2" id="descargar_btn" data-bs-toggle="tooltip" title="Se descargará el resultado la instancia">Descargar</button>
               <button type="button" class="btn btn-danger mb-2" data-bs-toggle="tooltip" title="Eliminar la instancia">Eliminar</button>
           </ul>
+        </div>
+    </div>
+    <div class="row mt-5" >
+      <!--Modelo-->
+      <div class="col-md-10">
+        <div class="content-section">
+          <div class="row mb-2 ml-1"> <!--Modificar-->
+            <div class = "col-md-8">
+              <h3 class="mb">Resultados del modelo</h3>  
+            </div>
+            <div class = "col-md-4">
+              <h3 class="mr-2 text-right" id = "instancia_a_modelada"></h3>  
+            </div>
+          </div>
+          
+          <form action="" method="POST">
+            {{ form_instancia_modelo.csrf_token() }}
+            <fieldset class="form-group">
+              <div class="form-group" style="height:100%;">
+                {{ form_instancia_modelo.resultado.label(class="formcontrol-label" ) }}
+                {{ form_instancia_modelo.resultado(id="resultado_modelo", class="form-control form-control", readonly=true) }}
+              </div>
+              <div class="form-group">
+                {{ form_instancia_modelo.guardar_btn(class="btn btn-outline-info") }}
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <!--Botones del modelo-->
+      <div class="col-md-2">
+        <ul class="list-group">
+            <button type="button" class="btn btn-primary mb-2" id="descargar_btn" data-bs-toggle="tooltip" title="Se descargará el resultado del modelo">Descargar</button>
+            <button type="button" class="btn btn-primary mb-2" id="guardar_btn" data-bs-toggle="tooltip" title="Se guardará el resultado del modelo en la base de datos">Guardar</button>
+        </ul>
       </div>
     </div>
 </div>
@@ -77,6 +116,23 @@
   }
 </script>
 
+<!--No me convence
+<script type="text/javascript">
+  function probarInstancia(instancia) {
+    //TO DO: De alguna manera tendremos que desahabilitar el botón de probar el modelo hasta que el modelo haya acabado de ejecutarse
+    document.getElementById("instancia_a_modelada").textContent = "Instancia: " + instancia; 
+    //Probaré primero ha ejecutar el modelo y recoger los datos desde aquí
+    try {
+      
+      
+      document.getElementById("resultado_modelo").value = __dirname
+    } catch (error) {
+      document.getElementById("resultado_modelo").value = error
+    }
+
+  }
+</script>
+-->
 {% for category, message in get_flashed_messages(with_categories=true) %}
   <script>
     alert({{ message | tojson | safe }});

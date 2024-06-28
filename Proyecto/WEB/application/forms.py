@@ -20,12 +20,14 @@ class Mod_Instancia_Form(FlaskForm):
     modificar_btn = SubmitField("Modificar", 
                                 render_kw={"title": "Se modificará el contenido dela instancia en cuestión"})
 
+
 #Working on
+    
 class Instancia_Modelo_Form(FlaskForm):
     nombre = StringField('<Nombre>', validators=[DataRequired()],
                          render_kw={"title": "Nombre de la instancia, no añadir extensión"}
                          )
-    contenido = TextAreaField('Contenido',validators=[DataRequired()],
+    resultado = TextAreaField('Contenido',validators=[DataRequired()],
                               render_kw={"title": "Resultado del modelo"}
                               )
     guardar_btn = SubmitField("Guardar", 
