@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 
 #include <cstdlib>
 
@@ -52,7 +53,7 @@ int processor(const string &ins_file,
 int main(int argc, char **argv)
 {
     int exit_code = 0;
-    
+    cout << "-----------------Modelo OPS_CPX------------------\n";
     if (argc == 1) {
         cout << "Ejecucion rapida, eliminar en el futuro o corregir";
         const string sta_file("/home/kilian/Escritorio/TFG/Proyecto/OPS_CPX/tmp.txt");
@@ -66,7 +67,7 @@ int main(int argc, char **argv)
                               id);
         return exit_code;
     }
-    if (argv[1] == "-h") {
+    if (argc > 1 && strcmp(argv[1], "-h") == 0) {
         cout << "Para la correcta ejecución del programa debera de ser tal que \"emir_cpx <temp_file> <instace_file> <output_log_file>\" donde:\n"<<
                     " \"temp_file\": Fichero temporal el cual se usará para ciertos cálculos\n" <<
                     " \"instace_file\": Fichero con la instancia del problema\n" <<

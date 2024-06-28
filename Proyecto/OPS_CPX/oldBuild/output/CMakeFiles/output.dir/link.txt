@@ -1,0 +1,2 @@
+/usr/bin/ar qc liboutput.a CMakeFiles/output.dir/src/OPS_output_t.cpp.o
+/usr/bin/ranlib liboutput.a

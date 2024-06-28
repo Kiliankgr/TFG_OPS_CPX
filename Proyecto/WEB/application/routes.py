@@ -172,10 +172,10 @@ def ejecutar_modelo(ruta_del_programa, *args):
     
     try:
         # Ejecutar el programa con los argumentos dados
-        #resultado = subprocess.run([ruta_del_programa, *args], check=True, capture_output=True, text=True)
+        resultado = subprocess.run([ruta_del_programa, *args], capture_output=True, text=True)
         #resultado = subprocess.run(["pwd"], shell=True, capture_output=True, text=True)
-        resultado = subprocess.run([ruta_del_programa, "-h"], shell=True, capture_output=True, text=True)
-        print("Argurmentos:" + str(resultado.args))
+        #resultado = subprocess.run([ruta_del_programa, "-h"], capture_output=True, text=True)
+        print("Argumentos:" + str(resultado.args))
         print(resultado.stdout)
         return resultado.stdout  # O puedes retornar resultado si quieres incluir stderr y más información
     except subprocess.CalledProcessError as e:
