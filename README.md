@@ -24,19 +24,23 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 
 ## Notas 
 * Actualmente está testeado con el fichero ubicado en "/home/kilian/Escritorio/TFG/Proyecto/OPS_CPX/test_ins.txt" se modificará a posteriori para pasarlo por argumentos
-* Se creará un fichero .log con los resultados de la ejecución entre otros.
+* Se creará un fichero .log con los resultados de la ejecución .
 
 ## TO DO
 * Manejo de errores
-* Eliminación de instancias y Logs .
+* Eliminación de Logs .
 * Añadir elementos al home
 * Descargar elementos
 * Interfaz modelo-instancia
-* Retocar el diseño de los modelos para la instancia
+* Retocar el diseño de los modelos para la instancia, arreglar tambié que el texto de las instancias puede producir un overflow y salir del contenedor
 * Guardar modelos en la base de datos
-* Permitir arrastrar ficheros para añadir instancias
+* Permitir arrastrar ficheros para añadir instancias( hecho)
+
 
 ## References
 [](https://flask.palletsprojects.com/en/3.0.x/)
 [](https://flask.palletsprojects.com/en/3.0.x/deploying/)
+[](https://docs.python.org/es/3.8/library/venv.html)
 [](https://www.mongodb.com/resources/products/compatibilities/setting-up-flask-with-mongodb)
+[](https://wtforms.readthedocs.io/en/2.3.x/)
+[](https://getbootstrap.com/docs/4.0/)

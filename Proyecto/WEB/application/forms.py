@@ -13,6 +13,9 @@ class Add_Instancia_Form(FlaskForm):
 
 
 class Mod_Instancia_Form(FlaskForm):
+    nombre = StringField('<Nombre>', validators=[DataRequired()],
+                         render_kw={"title": "Nombre de la instancia"}
+                         )    
     contenido = TextAreaField('Contenido',validators=[DataRequired()],
                               render_kw={"title": "Introduzca aquí el contenido de la instancia en formato JSON"}
                               )

@@ -202,6 +202,7 @@ def eliminar_instancia(id):
         result = db['Instancias'].find_one_and_delete({"_id": object_id})
         if result:
             print(f"Instancia eliminada: {id}")
+            flash("Instancia añadida correctamente", "success")
         else:
             print(f"No se encontró ninguna instancia con id: {id}")
     except Exception as e:

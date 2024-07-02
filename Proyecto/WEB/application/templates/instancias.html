@@ -11,6 +11,10 @@
       max-height: 500px; /* Ajusta esta altura según sea necesario */
       overflow-y: auto;
   }
+
+  #columna_contenido_instancias {
+    overflow-y: auto;
+  }
 </style>
 
 <div class="container mt-5">
@@ -35,16 +39,20 @@
           </div>
         </div>
         <!-- Sección de Contenido de la Instancia -->
-        <div class="col-md-6">
-            <div class="content-section">
-                <h3 id="nombre_instancia">Nombre</h3>
+        <div class="col-md-6" id="columna_contenido_instancias">
+            <div class="content-section" id = "content-section_intancias" >
+                <!--<h3 id="nombre_instancia">Nombre</h3>-->
                 
                 <form action="" method="POST">
                   {{ form_mod_instancia.csrf_token() }}
                   <fieldset class="form-group">
+                    <div class="form-group">
+                      <input type="text" readonly class="form-control-plaintext" id="nombre_instancia" style="font-size: 1.75rem; font-weight: bold;" value="<Nombre>">
+                    </div>
+
                     <div class="form-group" style="height:100%;">
                       {{ form_mod_instancia.contenido.label(class="formcontrol-label") }}
-                      {{ form_mod_instancia.contenido(id="contenido_instancia", style="height:80%", class="form-control form-control") }}
+                      {{ form_mod_instancia.contenido(id="contenido_instancia", style="height:80%", class="form-control") }}
                     </div>
                     <div class="form-group">
                       {{ form_mod_instancia.modificar_btn(class="btn btn-outline-info") }}
@@ -63,11 +71,19 @@
               <!--Ejecución del modelo-->
               <form id="probar_modelo_form" method="POST" action="">
                 <input type="hidden" name="id_instancia_a_probar" id="id_instancia_a_probar" value="">
-                <button type="submit" class="btn btn-primary mb-2" style="width:100%;" name="probar_btn" id="probar_btn" data-bs-toggle="tooltip" title="Probar la instancia con el modelo">Probar</button>
+                <button type="submit" class="btn btn-primary mb-2" style="width:100%;" name="probar_btn" id="probar_btn" data-bs-toggle="tooltip" title="Probar la instancia con el modelo" disabled>Probar</button>
               </form>
-              <button type="button" class="btn btn-primary mb-2" id="descargar_btn" data-bs-toggle="tooltip" title="Se descargará el resultado la instancia">Descargar</button>
+              <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se descargará el resultado la instancia" name="descargar_instancia_btn" id="descargar_instancia_btn" disabled>Descargar</button>
               <!-- Eliminación de instancias-->
-              <button type="submit" class="btn btn-danger mb-2" style="width:100%" data-bs-toggle="tooltip" title="Eliminar la instancia" name="eliminar_instancia_btn" id="eliminar_instancia_btn" disabled>Eliminar</button>
+              <button type="button" class="btn btn-danger mb-2" style="width:100%" data-bs-toggle="tooltip" title="Eliminar la instancia" name="eliminar_instancia_btn" id="eliminar_instancia_btn" disabled>Eliminar</button>
+              <!--Detector de alertas-->
+              {% for category, message in get_flashed_messages(with_categories=true) %}
+              <div class="row">
+                <div class="alert alert-info" role = "alert" id="mensaje_flash">
+                  {{ message }}
+                </div>
+              </div>
+              {% endfor %}
           </ul>
         </div>
     </div>
@@ -117,11 +133,14 @@
     // Actualizar el contenido del formulario
     document.getElementById("id_instancia_a_probar").value = instancia._id; 
     document.getElementById("identificador_seleccionado").value = instancia._id; 
-    document.getElementById("nombre_instancia").textContent = instancia.nombre;
+    //document.getElementById("nombre_instancia").textContent = instancia.nombre; //Probablemente modifique la etiqueta de nombre y por ende esta linea de aquí
+    document.getElementById("nombre_instancia").value = instancia.nombre;
     document.getElementById("contenido_instancia").value = JSON.stringify(instancia.contenido, null, 2); 
     // modificamos el valor en caso de querer probar la instancia
     //Activamos la opción de que se pueda eliminar la instancia
+    document.getElementById("probar_btn").disabled = false;
     document.getElementById("eliminar_instancia_btn").disabled = false;
+    document.getElementById("descargar_instancia_btn").disabled = false;
     
   }
 </script>
@@ -134,12 +153,38 @@
       window.location.href = newUrl;
   });
 </script>
+<!--Evento descargar instancia-->
 
-{% for category, message in get_flashed_messages(with_categories=true) %}
-  <script>
-    alert({{ message | tojson | safe }});
-  </script>
-{% endfor %}
+
+<script>//REVISAR
+  document.getElementById('descargar_instancia_btn').addEventListener('click', function() {
+    //obtenemos nombre y contenido de la instancia seleccionada
+    nombre = document.getElementById('nombre_instancia').value
+    contenido = document.getElementById("contenido_instancia").value
+    
+    // Crear un objeto Blob con el contenido
+    var blob = new Blob([contenido], { type: 'text/plain' });
+
+    // Crear un objeto URL para el Blob
+    var url = URL.createObjectURL(blob);
+
+    // Crear un enlace <a> para descargar el archivo
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = nombre + '.txt'; // Nombre del archivo a descargar
+
+    // Agregar el enlace al documento y hacer clic en él para descargar
+    document.body.appendChild(a);
+    a.click();
+
+    // Limpiar después de la descarga
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  
+  });
+</script>
+
+
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

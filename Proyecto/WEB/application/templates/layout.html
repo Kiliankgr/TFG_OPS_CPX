@@ -48,7 +48,25 @@
         
       </div>
     </main>
-
+    <!--Está atento a los mensajes, para los que posean el id mensaje_flash los muestre de manera temporal-->
+    <script>
+      window.onload = function() {
+          // Selecciona el mensaje flash
+          var flashMessage = document.getElementById('mensaje_flash');
+    
+          if (flashMessage) {
+              // Oculta el mensaje después de 2 segundos (2000 ms)
+              setTimeout(function() {
+                  flashMessage.classList.add('hidden');
+              }, 2000);
+    
+              // Elimina el mensaje del DOM después de la transición
+              setTimeout(function() {
+                  flashMessage.parentNode.removeChild(flashMessage);
+              }, 2500); // 2000 ms + 500 ms para la transición
+          }
+      };
+    </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
