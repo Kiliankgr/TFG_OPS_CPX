@@ -48,7 +48,7 @@ def mostrar_instancias():
             #print(ins["contenido"])
             
             for instancia in instancias:
-                print("ID: " + instancia["_id"], )
+                #print("ID: " + instancia["_id"], )
                 if instancia["_id"] == request.form.get("id_instancia_a_probar"):
                     #Creamos ficheros temporales
                     f_tmp = open(RUTA_FICHERO_TMP, "w") #revisar si son nesesarios crearlo antes
@@ -69,7 +69,18 @@ def mostrar_instancias():
         form_mod_instancia = Mod_Instancia_Form(request.form)
         #necesitamos el id por ahora se me ocurre que se añada al form y que esté en oculto
         modificar_instancia(form_mod_instancia)
-        
+
+    #instance_id = request.form.get('id_instancia_a_eliminar')
+    #print("biufhuiwepq:" + str(instance_id))
+    if request.method == 'DELETE': #No sirve no se pueden enviar forms que no sean post o get
+        print("Toca eliminar")
+        print("valores:")
+        print(request.form.values)
+        #return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo,  resultado_ultimo_modelo = resultado_ultimo_modelo)
+        if "eliminar_instancia_btn" in request.form:
+            print("Eliminar instancia:" + request.form.get("id_instancia_a_eliminar"))            
+            db.Intancias.find_one_and_delete({"_id": ObjectId(request.form.get("id_instancia_a_eliminar"))})
+    print("iufg0ueygferyo")
     return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo,  resultado_ultimo_modelo = resultado_ultimo_modelo)
 
 def modificar_instancia(form_mod_instancia):
@@ -168,8 +179,6 @@ def probar_instancia():
 def ejecutar_modelo(ruta_del_programa, *args):
     print("Vamos a ejecutar el modelo")
     #se la pasamos al modelo
-    
-    
     try:
         # Ejecutar el programa con los argumentos dados
         resultado = subprocess.run([ruta_del_programa, *args], capture_output=True, text=True)
@@ -181,3 +190,20 @@ def ejecutar_modelo(ruta_del_programa, *args):
     except subprocess.CalledProcessError as e:
         # Manejar el error si el programa falla
         return f"Error: {e}"
+    
+# Eliminación de instancias
+@app.route("/eliminar_instancia/<id>")
+def eliminar_instancia(id):
+    print("Eliminar instancia:" + str(id))            
+    try:
+        # Convertir id a ObjectId
+        object_id = ObjectId(id)
+        # Eliminar el documento cuyo _id sea igual al object_id
+        result = db['Instancias'].find_one_and_delete({"_id": object_id})
+        if result:
+            print(f"Instancia eliminada: {id}")
+        else:
+            print(f"No se encontró ninguna instancia con id: {id}")
+    except Exception as e:
+        print(f"Error al eliminar la instancia: {e}")
+    return redirect("/mostrar_instancias")

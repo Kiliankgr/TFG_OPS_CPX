@@ -60,12 +60,14 @@
         <div class="col-md-2">
           <ul class="list-group">
               <a type="button" href="/add_instancias" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</a>
+              <!--Ejecución del modelo-->
               <form id="probar_modelo_form" method="POST" action="">
                 <input type="hidden" name="id_instancia_a_probar" id="id_instancia_a_probar" value="">
                 <button type="submit" class="btn btn-primary mb-2" style="width:100%;" name="probar_btn" id="probar_btn" data-bs-toggle="tooltip" title="Probar la instancia con el modelo">Probar</button>
               </form>
               <button type="button" class="btn btn-primary mb-2" id="descargar_btn" data-bs-toggle="tooltip" title="Se descargará el resultado la instancia">Descargar</button>
-              <button type="button" class="btn btn-danger mb-2" data-bs-toggle="tooltip" title="Eliminar la instancia">Eliminar</button>
+              <!-- Eliminación de instancias-->
+              <button type="submit" class="btn btn-danger mb-2" style="width:100%" data-bs-toggle="tooltip" title="Eliminar la instancia" name="eliminar_instancia_btn" id="eliminar_instancia_btn" disabled>Eliminar</button>
           </ul>
         </div>
     </div>
@@ -106,37 +108,33 @@
     </div>
 </div>
 
+
+
 <!-- Pasar la variable 'instancias' al cliente como JSON -->
 <script type="text/javascript">
   function seleccionarInstancia(instancia) {
+    
     // Actualizar el contenido del formulario
     document.getElementById("id_instancia_a_probar").value = instancia._id; 
     document.getElementById("identificador_seleccionado").value = instancia._id; 
     document.getElementById("nombre_instancia").textContent = instancia.nombre;
     document.getElementById("contenido_instancia").value = JSON.stringify(instancia.contenido, null, 2); 
     // modificamos el valor en caso de querer probar la instancia
-    
+    //Activamos la opción de que se pueda eliminar la instancia
+    document.getElementById("eliminar_instancia_btn").disabled = false;
     
   }
 </script>
 
-<!--No me convence
-<script type="text/javascript">
-  function probarInstancia(instancia) {
-    //TO DO: De alguna manera tendremos que desahabilitar el botón de probar el modelo hasta que el modelo haya acabado de ejecutarse
-    document.getElementById("instancia_a_modelada").textContent = "Instancia: " + instancia; 
-    //Probaré primero ha ejecutar el modelo y recoger los datos desde aquí
-    try {
-      
-      
-      document.getElementById("resultado_modelo").value = __dirname
-    } catch (error) {
-      document.getElementById("resultado_modelo").value = error
-    }
-
-  }
+<!--Evento para eliminar instancias-->
+<script>
+  document.getElementById('eliminar_instancia_btn').addEventListener('click', function() {
+      const id = document.getElementById('identificador_seleccionado').value;
+      const newUrl = `{{ url_for('eliminar_instancia', id='') }}${id}`;
+      window.location.href = newUrl;
+  });
 </script>
--->
+
 {% for category, message in get_flashed_messages(with_categories=true) %}
   <script>
     alert({{ message | tojson | safe }});
