@@ -31,10 +31,13 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 * Eliminación de Logs .
 * Añadir elementos al home
 * Descargar elementos
-* Interfaz modelo-instancia
-* Retocar el diseño de los modelos para la instancia, arreglar tambié que el texto de las instancias puede producir un overflow y salir del contenedor
+* Retocar el diseño de los modelos para la instancia, arreglar también que el texto de las instancias puede producir un overflow y salir del contenedor
 * Guardar modelos en la base de datos
 * Permitir arrastrar ficheros para añadir instancias( hecho)
+* Batería de pruebas
+* Un modelo por instancia, hacer que la modificación elimine el modelo resultante si tuviera uno viejo
+* Mensaje mientras se ejecuta el modelo
+* Arreglar el timer de los elementos(id_equivocado y otros motivos como que hasta que no se ejecute el modelo este parece no enviar las alertas, por ende la alerta de ejecución se debería de crear en el front)
 
 
 ## References
