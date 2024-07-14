@@ -29,7 +29,7 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 ## TO DO
 * Manejo de errores
 * Eliminación de Logs .
-* Añadir elementos al home
+* Añadir elementos al home (hecho)
 * Descargar elementos
 * Retocar el diseño de los modelos para la instancia, arreglar también que el texto de las instancias puede producir un overflow y salir del contenedor
 * Guardar modelos en la base de datos

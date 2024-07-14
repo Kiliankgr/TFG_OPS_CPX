@@ -53,7 +53,7 @@ def mostrar_instancias():
                 
                 #print("ID: " + instancia["_id"], )
                 if instancia["_id"] == request.form.get("id_instancia_a_probar"):
-                    flash("Se está ejecutando el modelo, porfavor tenga paciencia, el modelo puede tardar unos minutos. Una vez acabado se guardará en la instancia seleccionada","warning")
+                    #flash("Se está ejecutando el modelo, porfavor tenga paciencia, el modelo puede tardar unos minutos. Una vez acabado se guardará en la instancia seleccionada","warning")
                     #Creamos ficheros temporales
                     f_tmp = open(RUTA_FICHERO_TMP, "w") #revisar si son nesesarios crearlo antes
                     # Escribir el diccionario en un fichero
@@ -63,10 +63,9 @@ def mostrar_instancias():
                     f_tmp.close()
                     f_salida.close()
                     
-                    ejecutar_modelo(RUTA_AL_MODELO, RUTA_FICHERO_TMP, RUTA_INSTANCIA_TMP, RUTA_SALIDA_TMP)
+                    ejecutar_modelo(RUTA_AL_MODELO, RUTA_FICHERO_TMP, RUTA_INSTANCIA_TMP, RUTA_SALIDA_TMP)                    
                     
-            #Para ello deberemos por ahora de crear una serie de ficheros temporales para pasarles el contenido al modelo
-
+            #Para ello deberemos por ahora de crear una serie de ficheros temporales para pasarles el contenido al modelo                    
             return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, resultado_ultimo_modelo = resultado_ultimo_modelo)
         
         print("Vamos a modificar una instancia")        
@@ -196,7 +195,7 @@ def ejecutar_modelo(ruta_del_programa, *args):
 
         #Comprobamos el tamaño del fichero para saber si este se ha escrito
         if(os.stat(args[2]).st_size == 0):
-            flash("Hubo un error al ejecutar el modelo(vacio):", "error")
+            flash("Hubo un error al ejecutar el modelo, no salieron resultados, compruebe el contenido del fichero instancia:", "error")
             return f"No se ha podido ejecutar el modelo, comprueba el formato de la instancia"
         print(resultado.stdout)
         #se entiende que si se ha llegado aquí todo ha ido bien
@@ -213,7 +212,7 @@ def ejecutar_modelo(ruta_del_programa, *args):
         })
         '''
         #Mensaje al usuario
-        flash("Instancia añadida correctamente", "success") # No veo que se muestre el mensaje revisar
+        flash("Modelo  ejecutado correctamente y guardado en la instancia correspondiente", "success") 
         return resultado.stdout  # O puedes retornar resultado si quieres incluir stderr y más información
     except subprocess.CalledProcessError as e:
         # Manejar el error si el programa falla

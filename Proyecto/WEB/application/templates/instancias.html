@@ -99,13 +99,16 @@
         <!--<div class="alert alert-info" role = "alert" id="mensaje_flash">
           {{ message }}
         </div>-->
+
         {% if category == 'warning'%}
         <div class="alert alert-{{ 'warning' if category == 'warning' else 'info' }}" role="alert" id="mensaje_flash_ejecucion">
           {{ message }}
         </div>
         {% endif %}
+        
       </div>
       {% endfor %}
+      <div id="flash_messages"></div> <!--Puesto por el front si ejecución-->
     </div>
     <div class="row mt-2" >
       <!--Modelo-->
@@ -213,11 +216,25 @@
 <!--Está atento a los mensajes, para los que posean el id mensaje_flash los muestre de manera temporal-->
 <script>
   window.onload = function() {
-      // Selecciona el mensaje flash
-      
-      //var flashMessage = document.getElementById('mensaje_flash_temporal');
-      var flashMessages = document.querySelectorAll('[id^="mensaje_flash_temporal_"]');
-      /*if (flashMessage) {
+    // Selecciona el mensaje flash
+    
+    //var flashMessage = document.getElementById('mensaje_flash_temporal');
+    var flashMessages = document.querySelectorAll('[id^="mensaje_flash_temporal_"]');
+    
+    flashMessages.forEach(function(flashMessage) {
+      // Oculta cada mensaje después de 2 segundos (2000 ms)
+      setTimeout(function() {
+          flashMessage.classList.add('hidden');
+      }, 3000);
+
+      // Elimina cada mensaje del DOM después de la transición
+      setTimeout(function() {
+          flashMessage.parentNode.removeChild(flashMessage);
+      }, 3500); // 3000 ms + 500 ms para la transición
+    });
+    //Busamos notificación de finalización del modelo
+    var messagefinalizacion = document.getElementById('mensaje_flash_temporal');
+    /*if (flashMessage) {
           // Oculta el mensaje después de 2 segundos (2000 ms)
           setTimeout(function() {
               flashMessage.classList.add('hidden');
@@ -228,19 +245,43 @@
               flashMessage.parentNode.removeChild(flashMessage);
           }, 2500); // 2000 ms + 500 ms para la transición
       }*/
-      flashMessages.forEach(function(flashMessage) {
-        // Oculta cada mensaje después de 2 segundos (2000 ms)
-        setTimeout(function() {
-            flashMessage.classList.add('hidden');
-        }, 2000);
-
-        // Elimina cada mensaje del DOM después de la transición
-        setTimeout(function() {
-            flashMessage.parentNode.removeChild(flashMessage);
-        }, 2500); // 2000 ms + 500 ms para la transición
-    });
   };
 </script>
+
+<!--Evento al pulsar el botón de probar el modelo-->
+
+<script>
+  document.getElementById('probar_btn').addEventListener('click', function(event) {
+      // Evitar el envío del formulario para pruebas
+      //event.preventDefault();
+
+      // Desactivar el botón temporalmente cuidado, no se puede enviar el formulario si el botón se encuentra disabled.
+      //document.getElementById("probar_btn").disabled = true;
+
+      // Generar el mensaje flash
+      const flashContainer = document.getElementById('flash_messages');
+      const flashMessage = document.createElement('div');
+      flashMessage.className = 'alert alert-info';
+      flashMessage.role = 'alert';
+      flashMessage.id = 'mensaje_flash_ejecutandose';
+      flashMessage.innerText = '(Front Quitar) Se está ejecutando el modelo, puede tardar varios minutos, por favor sea paciente';
+
+      flashContainer.appendChild(flashMessage);
+      /*
+      // Opcional: Ocultar y eliminar el mensaje después de un tiempo
+      setTimeout(function() {
+          flashMessage.classList.add('hidden');
+      }, 2000);
+
+      setTimeout(function() {
+          flashContainer.removeChild(flashMessage);
+      }, 2500);*/
+
+      // Si decides enviar el formulario después de mostrar el mensaje flash
+      //document.getElementById('probar_modelo_form').submit();
+  });
+</script>
+
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
