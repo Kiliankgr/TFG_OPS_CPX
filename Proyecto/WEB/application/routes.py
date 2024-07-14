@@ -20,7 +20,6 @@ def home():
 @app.route("/mostrar_instancias", methods=["GET", "POST", "DELETE"])
 def mostrar_instancias():
     estado_de_la_ultima_ejecucion_modelo = True #estará atento a la ultima ejecución del modelo
-    resultado_ultimo_modelo = ""
     #instancias = db.Instancias.find().sort("nombre")
     #instancias = [convert_objectid_to_str(instancia) for instancia in instancias]
   
@@ -32,6 +31,8 @@ def mostrar_instancias():
         instancia["nombre"] = str(instancia["nombre"])
         instancia = convert_objectid_to_str(instancia)        
         instancias.append(instancia)
+    
+    logs = obtener_logs()
 
     #Forms
     form_mod_instancia = Mod_Instancia_Form()
@@ -61,12 +62,12 @@ def mostrar_instancias():
                         json.dump(instancia["contenido"], file, indent=2)
                     f_salida = open(RUTA_SALIDA_TMP, "w") #revisar si son nesesarios crearlo antes
                     f_tmp.close()
-                    f_salida.close()
-                    
-                    ejecutar_modelo(RUTA_AL_MODELO, RUTA_FICHERO_TMP, RUTA_INSTANCIA_TMP, RUTA_SALIDA_TMP)                    
+                    f_salida.close()                    
+                    ejecutar_modelo(instancia["_id"],RUTA_AL_MODELO, RUTA_FICHERO_TMP, RUTA_INSTANCIA_TMP, RUTA_SALIDA_TMP)
+                    logs = obtener_logs()                    
                     
             #Para ello deberemos por ahora de crear una serie de ficheros temporales para pasarles el contenido al modelo                    
-            return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, resultado_ultimo_modelo = resultado_ultimo_modelo)
+            return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs)
         
         print("Vamos a modificar una instancia")        
         form_mod_instancia = Mod_Instancia_Form(request.form)
@@ -74,17 +75,20 @@ def mostrar_instancias():
         modificar_instancia(form_mod_instancia)
 
     #instance_id = request.form.get('id_instancia_a_eliminar')
-    #print("biufhuiwepq:" + str(instance_id))
-    if request.method == 'DELETE': #No sirve no se pueden enviar forms que no sean post o get
-        print("Toca eliminar")
-        print("valores:")
-        print(request.form.values)
-        #return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo,  resultado_ultimo_modelo = resultado_ultimo_modelo)
-        if "eliminar_instancia_btn" in request.form:
-            print("Eliminar instancia:" + request.form.get("id_instancia_a_eliminar"))            
-            db.Intancias.find_one_and_delete({"_id": ObjectId(request.form.get("id_instancia_a_eliminar"))})
-    print("iufg0ueygferyo")
-    return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo,  resultado_ultimo_modelo = resultado_ultimo_modelo)
+    return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs)
+
+def obtener_logs():
+    logs = []
+    for log in db.Logs.find().sort("nombre"):
+        #retocamos algunos datos como el id para que sean enviados como strings
+        log["_id"] = str(log["_id"])
+        log["nombre"] = str(log["nombre"])
+        log = convert_objectid_to_str(log)
+        contenido_array = log.get("contenido", [])        
+        log["contenido"] = ''.join(contenido_array)
+        logs.append(log)
+    return logs
+
 
 def modificar_instancia(form_mod_instancia):
     print(str(form_mod_instancia.identificador))
@@ -179,7 +183,7 @@ def probar_instancia():
     return render_template('probar_instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo)
 
 #Función que ejecutará el modelo
-def ejecutar_modelo(ruta_del_programa, *args):
+def ejecutar_modelo(instancia_id, ruta_del_programa, *args):
     print("Vamos a ejecutar el modelo")
     #se la pasamos al modelo
     try:
@@ -199,18 +203,11 @@ def ejecutar_modelo(ruta_del_programa, *args):
             return f"No se ha podido ejecutar el modelo, comprueba el formato de la instancia"
         print(resultado.stdout)
         #se entiende que si se ha llegado aquí todo ha ido bien
+        
         flash("Se ha ejecutado el modelo de manera correcta","success")
-        #Guardamos el modelo en la base de datos
-        '''
-        contenido_json = json.loads(add_instancia_contenido)
-        fecha_actual = time.strftime('%Y-%m-%d_%H:%M:%S')   
-        #pymongo flask, insertamos en la coleccion Instancias
-        db.Instancias.insert_one({
-            "nombre" : add_instancia_nombre, 
-            "fecha" : fecha_actual,
-            "contenido" : contenido_json
-        })
-        '''
+
+        #Guardamos el modelo en la base de datos y eliminamos el modelo viejo si existiese
+        guardar_resultados_modelo(instancia_id, str(args[2]))
         #Mensaje al usuario
         flash("Modelo  ejecutado correctamente y guardado en la instancia correspondiente", "success") 
         return resultado.stdout  # O puedes retornar resultado si quieres incluir stderr y más información
@@ -223,6 +220,58 @@ def ejecutar_modelo(ruta_del_programa, *args):
         print("fallo no conocido", e)
         flash("Hubo un error al ejecutar el modelo, probablemente la información de la instancia no es correcta", e)
         return f"Error: {e}"
+
+def eliminar_modelo_si_existe(instancia_id):
+    try:
+        # Eliminar el documento cuyo _id sea igual al object_id
+        result = db['Logs'].find_one_and_delete({"instancia_id": instancia_id})
+        if result:
+            print(f"Modelo eliminado: {id}")
+            flash("Modelo eliminado/sustituido correctamente", "success")
+            return True
+        else:
+            print(f"No se encontró ningun modelo con id: {id}")
+    except Exception as e:
+        print(f"Error al eliminar la modelo: {e}")    
+    return False
+
+    
+def guardar_resultados_modelo(instancia_id, ruta_fichero_informacion):
+    try:
+        #obtenemos la información de la instancia utilizada
+        object_id = ObjectId(instancia_id)
+        #instancia_usada =  db.Instancias.find({"_id": object_id})
+        instancia_usada = db.Instancias.find_one({"_id": object_id})
+        
+        #transformamos el contenido del fichero a JSON
+        with open(ruta_fichero_informacion, 'r') as file:
+            contenido = file.read().splitlines()
+        
+        
+        nombre_modelo = instancia_usada.get("nombre") + "_" + str(instancia_usada.get("fecha"))
+        
+        
+        
+        #contenido_json = json.loads(add_instancia_contenido)
+        fecha_actual = time.strftime('%Y-%m-%d_%H:%M:%S')   
+        #pymongo flask, insertamos en la coleccion Instancias
+        
+        #Eliminamos los modelos antiguos y guardamos el nuevo
+        eliminar_modelo_si_existe(instancia_id)
+
+        db.Logs.insert_one({
+            "nombre" : nombre_modelo, 
+            "fecha" : fecha_actual,
+            "contenido" : contenido,
+            "instancia_id" : instancia_id
+        })
+        
+        return True
+    except Exception as e:
+        flash(f"Hubo un error al guardar el modelo en la base de datos: {e}", "error" )
+        return f"Hubo un error al guardar el modelo en la base de datos: {e}"
+
+
     
     
 # Eliminación de instancias
@@ -230,6 +279,7 @@ def ejecutar_modelo(ruta_del_programa, *args):
 def eliminar_instancia(id):
     print("Eliminar instancia:" + str(id))            
     try:
+
         # Convertir id a ObjectId
         object_id = ObjectId(id)
         # Eliminar el documento cuyo _id sea igual al object_id
@@ -237,8 +287,17 @@ def eliminar_instancia(id):
         if result:
             print(f"Instancia eliminada: {id}")
             flash("Instancia eliminada correctamente", "success")
+            #Eliminamos el resultado de la instancia en cuestión
+            eliminar_modelo_si_existe(id)
         else:
             print(f"No se encontró ninguna instancia con id: {id}")
     except Exception as e:
         print(f"Error al eliminar la instancia: {e}")
+    return redirect("/mostrar_instancias")
+
+# Eliminación de modelos a partir de instancia
+@app.route("/eliminar_modelo/<id>")
+def eliminar_modelo(id):
+    print("Eliminar modelo de la intancia con id:" + str(id))            
+    eliminar_modelo_si_existe(id)
     return redirect("/mostrar_instancias")

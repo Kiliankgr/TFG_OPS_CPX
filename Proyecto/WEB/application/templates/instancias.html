@@ -114,40 +114,36 @@
       <!--Modelo-->
       <div class="col-md-10">
         <div class="content-section">
-          <div class="row mb-2"> <!--Modificar-->
-            <div class = "col-md-8">
-              <h3 class="mb">Resultados del modelo</h3>  
+          <!--Informacion del modelo-->
+          
+            <div class="card">
+              <div class="card-header h4 font-weight-bold">                
+                Información del Modelo
+              </div>
+              <div class="card-body">
+                <div class="row ml-1">    
+                  <h4 class="card-title font-weight-bold">Nombre Modelo: </h4> <p class="card-text"></p>
+                  <h4 class="card-title" id="nombre_modelo">a</h4>
+                </div>
+                <div class="row ml-1">    
+                  <p class="card-text font-weight-bold">Fecha de creación: <span id="fecha-creacion"></span></p>
+                  <p class="card-text" id="fecha_modelo">a</p>
+                </div>
+                <div class="row ml-1">    
+                  <p class="card-text font-weight-bold">Contenido:</p>
+                </div>          
+                <textarea class="form-control" id="contenido_modelo" rows="10" readonly></textarea>
+              </div>
             </div>
-            <div class = "col-md-4">
-              
-              <h3 class="mr-2 text-right" id = "instancia_a_modelada"></h3>
-              <!--<h3 class="mr-2 text-right" id = "instancia_a_modelada"></h3>-->
-            </div>
-          </div>
-          <!--To Do: Modificar esto ya no hará falta el formulario-->
-          <form action="" method="POST">
-            {{ form_instancia_modelo.csrf_token() }}            
-            <fieldset class="form-group">
-              
-              <input type="text" readonly class="form-control-plaintext" id="nombre_modelo" style="font-size: 1.75rem; font-weight: bold;" value="Nombre modelo:">                            
-                
+          
 
-              <div class="form-group" style="height:100%;">
-                {{ form_instancia_modelo.resultado.label(class="formcontrol-label" ) }}
-                {{ form_instancia_modelo.resultado(id="resultado_modelo", class="form-control form-control", readonly=true) }}
-              </div>
-              <div class="form-group">
-                {{ form_instancia_modelo.guardar_btn(class="btn btn-outline-info") }}
-              </div>
-            </fieldset>
-          </form>
         </div>
       </div>
       <!--Botones del modelo-->
       <div class="col-md-2">
         <ul class="list-group">
-            <button type="button" class="btn btn-primary mb-2" id="descargar_btn" data-bs-toggle="tooltip" title="Se descargará el resultado del modelo">Descargar</button>
-            <button type="button" class="btn btn-danger mb-2" id="guardar_btn" data-bs-toggle="tooltip" title="Se eliminará el resultado del modelo">Eliminar</button>
+            <button type="button" class="btn btn-primary mb-2" id="descargar_modelo_btn" data-bs-toggle="tooltip" title="Se descargará el resultado del modelo" disabled>Descargar</button>
+            <button type="button" class="btn btn-danger mb-2" id="eliminar_modelo_btn" data-bs-toggle="tooltip" title="Se eliminará el resultado del modelo" disabled>Eliminar</button>
         </ul>
       </div>
     </div>
@@ -155,8 +151,11 @@
 
 
 
+
 <!-- Pasar la variable 'instancias' al cliente como JSON -->
 <script type="text/javascript">
+  var logs = {{ logs|tojson }};
+
   function seleccionarInstancia(instancia) {
     
     // Actualizar el contenido del formulario
@@ -170,6 +169,23 @@
     document.getElementById("probar_btn").disabled = false;
     document.getElementById("eliminar_instancia_btn").disabled = false;
     document.getElementById("descargar_instancia_btn").disabled = false;
+    document.getElementById("descargar_modelo_btn").disabled = false;
+    document.getElementById("eliminar_modelo_btn").disabled = false;
+    
+    //Buscamos si existe un log ya con el contenido
+    var log = logs.find(function(log) {
+      return log.instancia_id === instancia._id;
+    });
+    
+    if (log) {
+      //logElemento.style.display = 'block';
+      document.getElementById("nombre_modelo").textContent = log.nombre;
+      document.getElementById("fecha_modelo").textContent = instancia._id;
+    // Actualizar el elemento con el contenido del log, si se encuentra
+      document.getElementById("contenido_modelo").value=JSON.stringify(log, null, 2); 
+    } else {
+      logElemento.style.display = 'none';
+    }
     
   }
 </script>
@@ -183,6 +199,15 @@
   });
 </script>
 <!--Evento descargar instancia-->
+
+<!--Evento para eliminar modelos-->
+<script>
+  document.getElementById('eliminar_modelo_btn').addEventListener('click', function() {
+      const id = document.getElementById('identificador_seleccionado').value;
+      const newUrl = `{{ url_for('eliminar_modelo', id='') }}${id}`;
+      window.location.href = newUrl;
+  });
+</script>
 
 
 <script>//REVISAR
@@ -225,12 +250,12 @@
       // Oculta cada mensaje después de 2 segundos (2000 ms)
       setTimeout(function() {
           flashMessage.classList.add('hidden');
-      }, 3000);
+      }, 6000);
 
       // Elimina cada mensaje del DOM después de la transición
       setTimeout(function() {
           flashMessage.parentNode.removeChild(flashMessage);
-      }, 3500); // 3000 ms + 500 ms para la transición
+      }, 6500); // 3000 ms + 500 ms para la transición
     });
     //Busamos notificación de finalización del modelo
     var messagefinalizacion = document.getElementById('mensaje_flash_temporal');
