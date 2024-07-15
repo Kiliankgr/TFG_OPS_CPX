@@ -16,6 +16,10 @@ RUTA_SALIDA_TMP = 'fichero_salida_tmp.txt'
 def home():
     return render_template('home.html') 
 
+@app.route("/about")
+def about():
+    return render_template('about.html') 
+
 # Por ahora mostrará los instancias y permitirá modificar su contenido o añadir nuevos 
 @app.route("/mostrar_instancias", methods=["GET", "POST", "DELETE"])
 def mostrar_instancias():
@@ -33,6 +37,8 @@ def mostrar_instancias():
         instancias.append(instancia)
     
     logs = obtener_logs()
+    print("Logs cotenido:")
+    print(logs[0]["contenido"])
 
     #Forms
     form_mod_instancia = Mod_Instancia_Form()
@@ -85,7 +91,7 @@ def obtener_logs():
         log["nombre"] = str(log["nombre"])
         log = convert_objectid_to_str(log)
         contenido_array = log.get("contenido", [])        
-        log["contenido"] = ''.join(contenido_array)
+        log["contenido"] = '\n'.join(contenido_array)
         logs.append(log)
     return logs
 

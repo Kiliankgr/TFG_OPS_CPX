@@ -180,11 +180,16 @@
     if (log) {
       //logElemento.style.display = 'block';
       document.getElementById("nombre_modelo").textContent = log.nombre;
-      document.getElementById("fecha_modelo").textContent = instancia._id;
+      document.getElementById("fecha_modelo").textContent = log.fecha;
     // Actualizar el elemento con el contenido del log, si se encuentra
-      document.getElementById("contenido_modelo").value=JSON.stringify(log, null, 2); 
+      document.getElementById("contenido_modelo").value= log.contenido;
     } else {
-      logElemento.style.display = 'none';
+      document.getElementById("nombre_modelo").textContent = "<No se ha ejecutado el modelo para esta instancia>";
+      document.getElementById("fecha_modelo").textContent = "";
+    // Actualizar el elemento con el contenido del log, si se encuentra
+      document.getElementById("contenido_modelo").value= "";
+      document.getElementById("descargar_modelo_btn").disabled = true;
+      document.getElementById("eliminar_modelo_btn").disabled = true;
     }
     
   }
@@ -231,7 +236,35 @@
     document.body.appendChild(a);
     a.click();
 
-    // Limpiar después de la descarga
+    // Limpiamos después de la descarga
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  
+  });
+</script>
+
+<script>
+  document.getElementById('descargar_modelo_btn').addEventListener('click', function() {
+    //obtenemos nombre y contenido de la instancia seleccionada
+    nombre = document.getElementById('nombre_modelo').textContent
+    contenido = document.getElementById("contenido_modelo").value
+    
+    // Crear un objeto Blob con el contenido
+    var blob = new Blob([contenido], { type: 'text/plain' });
+
+    // Crear un objeto URL para el Blob
+    var url = URL.createObjectURL(blob);
+
+    // Crear un enlace <a> para descargar el archivo
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = nombre + '.txt'; // Nombre del archivo a descargar
+
+    // Agregar el enlace al documento y hacer clic en él para descargar
+    document.body.appendChild(a);
+    a.click();
+
+    // Limpiamos después de la descarga
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   
@@ -257,19 +290,8 @@
           flashMessage.parentNode.removeChild(flashMessage);
       }, 6500); // 3000 ms + 500 ms para la transición
     });
-    //Busamos notificación de finalización del modelo
+    //Buscamos notificación de finalización del modelo
     var messagefinalizacion = document.getElementById('mensaje_flash_temporal');
-    /*if (flashMessage) {
-          // Oculta el mensaje después de 2 segundos (2000 ms)
-          setTimeout(function() {
-              flashMessage.classList.add('hidden');
-          }, 2000);
-
-          // Elimina el mensaje del DOM después de la transición
-          setTimeout(function() {
-              flashMessage.parentNode.removeChild(flashMessage);
-          }, 2500); // 2000 ms + 500 ms para la transición
-      }*/
   };
 </script>
 
@@ -289,21 +311,9 @@
       flashMessage.className = 'alert alert-info';
       flashMessage.role = 'alert';
       flashMessage.id = 'mensaje_flash_ejecutandose';
-      flashMessage.innerText = '(Front Quitar) Se está ejecutando el modelo, puede tardar varios minutos, por favor sea paciente';
+      flashMessage.innerText = 'Se está ejecutando el modelo, puede tardar varios minutos, por favor sea paciente';
 
       flashContainer.appendChild(flashMessage);
-      /*
-      // Opcional: Ocultar y eliminar el mensaje después de un tiempo
-      setTimeout(function() {
-          flashMessage.classList.add('hidden');
-      }, 2000);
-
-      setTimeout(function() {
-          flashContainer.removeChild(flashMessage);
-      }, 2500);*/
-
-      // Si decides enviar el formulario después de mostrar el mensaje flash
-      //document.getElementById('probar_modelo_form').submit();
   });
 </script>
 
