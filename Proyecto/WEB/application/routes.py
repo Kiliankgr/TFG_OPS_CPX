@@ -37,18 +37,11 @@ def mostrar_instancias():
         instancias.append(instancia)
     
     logs = obtener_logs()
-    print("Logs cotenido:")
-    print(logs[0]["contenido"])
-
     #Forms
     form_mod_instancia = Mod_Instancia_Form()
     form_instancia_modelo = Instancia_Modelo_Form()
     # Modificar Instancias
     if request.method == "POST":        #Nota revisar ya que probablemente si vamos a mantener los modelos con las instancia, el post deberá de detectar la solicitud si es de mod contenido instancia, o guardar modelo resultante
-        print("valores:")
-        print(request.form.values)
-        print("request value :")
-        print(request.form.get("id_instancia_a_probar"))        
         #Diferenciamos las diferentes solicitudes post
         if "probar_btn" in request.form :
             print("Se detectó el btn probar:")
@@ -97,12 +90,11 @@ def obtener_logs():
 
 
 def modificar_instancia(form_mod_instancia):
-    print(str(form_mod_instancia.identificador))
+    
     identificador = form_mod_instancia.identificador.data
-    print("ID: " + identificador)
+    
     mod_instancia_contenido = form_mod_instancia.contenido.data
-    print("modificar instancia")
-    print(mod_instancia_contenido)
+    
         #Pasamos a Json el contenido
     try:
         contenido_json = json.loads(mod_instancia_contenido)
@@ -197,11 +189,10 @@ def ejecutar_modelo(instancia_id, ruta_del_programa, *args):
         
         resultado = subprocess.run([ruta_del_programa, *args], capture_output=True, text=True)
         #resultado = subprocess.run(["pwd"], shell=True, capture_output=True, text=True)
-        #resultado = subprocess.run([ruta_del_programa, "-h"], capture_output=True, text=True)
         print("Argumentos:" + str(resultado.args))
         #comprobamos que se ha generado la solución si el fichero está vacío mandamos error
         print("Fichero: " + str(args[2]))
-        print("Tamañofichero vacio: " +str(os.stat(args[2]).st_size == 0))
+        #print("Tamañofichero vacio: " +str(os.stat(args[2]).st_size == 0))
 
         #Comprobamos el tamaño del fichero para saber si este se ha escrito
         if(os.stat(args[2]).st_size == 0):
