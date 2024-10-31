@@ -23,19 +23,21 @@ void read(const string &file_name, OPS_instance_t &instance)
     input_file.close();
 }
 
+//Ficheros usados para el procesamiento
 int processor(const string &ins_file,
               const string &sta_file,
               const string &log_file,
               const int id)
 {
+    //Leemos y obtenemos los datos del fichero instancia
     OPS_instance_t I; 
     read(ins_file, I);
-
+    //Con la informacion obtenida de la instancia
     OPS_input_t In(I);
     const double tol = 1E-4;
 
     OPS_output_t Out(In);
-
+    //NOTA:: Seguramente si queremos añadir la información de los resultados deberemos de trabajar con OPS_OUT
     ofstream O_file(sta_file, std::ios_base::app);
     ofstream L_file(log_file);
 
@@ -76,11 +78,11 @@ int main(int argc, char **argv)
     }
     
 
-    if (argc >= 4) {
+    if (argc == 4) {
         /*
-         *  argv[1]       Target file
-         *  argv[2]       Instance file
-         *  argv[3]       Output log file
+         *  argv[1]       Target file       - Fichero temporal
+         *  argv[2]       Instance file     - Instacia con los parametros de los objetos y varillas(distancias entre ellos, ubicación, tiempo...)
+         *  argv[3]       Output log file   - Fichero con información acerca del tiempo de ejecución soluciones ...
          */
         const string sta_file(argv[1]);
         const string ins_file(argv[2]);
@@ -94,8 +96,7 @@ int main(int argc, char **argv)
                               id);
         return exit_code;
     }
-    /*if (argc == 7)
-    {
+    if (argc == 7) {//No realizado aún
 
         /*
          *  argv[1]       Target file
@@ -106,7 +107,7 @@ int main(int argc, char **argv)
          *  argv[6]       Solver ID
          */
 
-        /*const string sta_file(argv[1]);
+        const string sta_file(argv[1]);
         const string ins_file(argv[2]);
         const string log_file(argv[3]);
         
@@ -122,7 +123,8 @@ int main(int argc, char **argv)
                               sta_file,
                               log_file,
                               id);
-    }*/
+        return exit_code;
+    }
 
     return exit_code;
 }

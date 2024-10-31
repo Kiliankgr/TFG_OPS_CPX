@@ -28,9 +28,12 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 
 ## TO DO
 * Manejo de errores
-
-
 * Descargar modelo, instancia ya hecho
+
+## Funcionamiento del OPS
+* Se le pasan el fichero con la instancia y el fichero con la salida, así como un fichero temporal. 
+* El programa genera un objeto con la información de la instancia con el fichero de instancia (OPS_instance)
+* Dicho objeto se le entrega al OPS_input, donde genera la estructura a partir de la información
 
 
 ## References
