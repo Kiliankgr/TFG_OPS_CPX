@@ -42,7 +42,14 @@ int processor(const string &ins_file,
     ofstream L_file(log_file);
 
     (*solver_array[id])(&In, tol, Out, L_file, O_file);
-
+    /*Quitar, resulta que solo erab información "boba", nombre del fichero instancia, coste optimo estimado,precisión, si se encontró, si era optimo
+    cout  << "\n Veamos que se escribe aqui---------------------------\n";
+    Out.write_statistics(std::cout);
+    cout  << "\n Veamos que se escribe aqui---------------------------\n";
+    In.write_statistics(std::cout);
+    cout  << "\n Veamos que se escribe aqui---------------------------\n";
+    In.write_statistics_hdr(std::cout);
+    */
     O_file << endl;
     O_file.close();
 
@@ -89,13 +96,15 @@ int main(int argc, char **argv)
         const string log_file(argv[3]);
         
         const int id = 0;
-
+        
         exit_code = processor(ins_file,
                               sta_file,
                               log_file,
                               id);
+        
         return exit_code;
     }
+    /**
     if (argc == 7) {//No realizado aún
 
         /*
@@ -105,7 +114,7 @@ int main(int argc, char **argv)
          *  argv[4]       Output sol file
          *  argv[5]       Output sta file
          *  argv[6]       Solver ID
-         */
+         
 
         const string sta_file(argv[1]);
         const string ins_file(argv[2]);
@@ -125,6 +134,6 @@ int main(int argc, char **argv)
                               id);
         return exit_code;
     }
-
+    */
     return exit_code;
 }

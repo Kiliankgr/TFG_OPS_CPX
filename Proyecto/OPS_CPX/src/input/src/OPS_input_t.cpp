@@ -125,8 +125,8 @@ namespace EMIR
 void OPS_input_t::resize_structures(void)
 {
     //Modificamos el tamaño de la estructura según la instancia
-    const int m = get_m(); //Jk (Varillas)
-    const int n = get_n(); //b (No se que es, ¿Pesos de cada uno de los objetos a observar?)
+    const int m = get_m(); //Jk Matriz de Varillas con los objetos a observar
+    const int n = get_n(); //b Beneficio(peso) de cada objeto
 	
 	//cout << "CREANDO ESTRUCTURAS: " << m << " " << n << endl;
     
@@ -808,7 +808,7 @@ void OPS_input_t::write_statistics_hdr(ostream& os) const
 void OPS_input_t::write_statistics(ostream& os) const
 {
     instance_.write_statistics(os);
-
+    
     int nsync, maxgsync, mingsync;
     double avggsync;
 
