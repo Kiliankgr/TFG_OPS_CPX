@@ -28,7 +28,11 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 
 ## TO DO
 * Manejo de errores
-* Descargar modelo, instancia ya hecho
+* Añadir interfaz con los nuevos datos
+* Sustituir los mensajes de ejecución del algoritmo por una "pantalla de carga", bloquear la ventana web mientras.
+* Mostrar instancia, el texto de los nombres de instancia no deberían de sobresalir
+* Remodelar la interfaz de instancias, no me termina de convencer el text area de modificar, tal vez lo de modificar que sea un pop up y alli se modifica, recolocar botones, añadir un filtro/buscador (dos opciones en esa misma interfaz o, modificamos la interfaz, quitamos la columna que muestra todos las intancias y añadimos un botoón  de seleccion que nos muestre todas las intancias en una ventana tipo como explorador de archivos).
+* Añadir transiciones o efectos ala hora de seleccionar ciertos elementos
 
 ## Funcionamiento del OPS
 * Se le pasan el fichero con la instancia y el fichero con la salida, así como un fichero temporal. 

@@ -161,32 +161,8 @@ def add_instancias():
     else:
         form_add_instancia = Add_Instancia_Form()
     return render_template('add_instancias.html', form_add_instancia = form_add_instancia) 
+#### Diria que probar intancias template y todo sobran, ya que lo tengo todo dentro de la ruta instancia y instancias.html----------------------------------------------------------
 
-@app.route("/probar_instancias", methods=["GET", "POST"])
-def probar_instancia():
-        
-    #instancias = db.Instancias.find().sort("nombre")
-    #instancias = [convert_objectid_to_str(instancia) for instancia in instancias]
-  
-    instancias = []
-    
-    for instancia in db.Instancias.find().sort("nombre"):
-        #retocamos algunos datos como el id para que sean enviados como strings
-        instancia["_id"] = str(instancia["_id"])
-        instancia["nombre"] = str(instancia["nombre"])
-        instancia = convert_objectid_to_str(instancia)        
-        instancias.append(instancia)
-
-    #Forms
-    form_mod_instancia = Mod_Instancia_Form()
-    form_instancia_modelo = Instancia_Modelo_Form()
-    # Modificar Instancias
-    if request.method == "POST":        #Nota revisar ya que probablemente si vamos a mantener los modelos con las instancia, el post deberá de detectar la solicitud si es de mod contenido instancia, o guardar modelo resultante
-        form_mod_instancia = Mod_Instancia_Form(request.form)
-        #necesitamos el id por ahora se me ocurre que se añada al form y que esté en oculto
-        modificar_instancia(form_mod_instancia)
-        
-    return render_template('probar_instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo)
 
 #Función que ejecutará el modelo
 def ejecutar_modelo(instancia_id, ruta_del_programa, *args):

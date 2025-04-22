@@ -19,8 +19,8 @@ public:
     const OPS_input_t& I_;
 
     GOMA::matrix<int>      x_;
-    vector<int>      y_;
-    vector<double>   s_;
+    vector<int>      y_; //Informa de qué trabajos se seleccionaron (1) y cuales no (0)
+    vector<double>   s_; //El instante en el tiempo en el que se observa
     vector<double>   h_;
 
     GOMA::matrix<int>      t_cost_;

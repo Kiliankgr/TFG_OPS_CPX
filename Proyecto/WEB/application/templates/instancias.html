@@ -8,49 +8,71 @@
 
   /* Estilos para el contenedor con desplazamiento */
   #columna_instancias {
-      max-height: 500px; /* Ajusta esta altura según sea necesario */
-      overflow-y: auto;
+      
+      /*height: 100%;*/
+      overflow: scroll; /* oculta desborde general */
+      max-height: 615px;
+      /*overflow-y: auto;*/
+  }
+  #columna_instancias .scrollable-content {
+    overflow-y: scroll;
+    height: 100%; /* este es el truco: que este div ocupe toda la columna */
   }
 
   #columna_contenido_instancias {
     overflow-y: auto;
+  }
+  #content-section_intancias{
+    
+    min-height: 400px;
+  }
+  #contenido_instancia{
+    height: max-content;
+    min-height: 400px;
+  }
+  #form_group_contenido{
+    height: max-content;
   }
 </style>
 
 <div class="container mt-5">
     <h2 class="mb-4">Instancias</h2>
     <div class="row">
-        <div class="col-md-4" id="columna_instancias">
-          <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
-            <ul class="list-group" style="width:100%">
-              {% for instancia in instancias %}
-                <!--Transformamos el diccionario de la instancia a JSON, <ignorar aviso de error>-->
-                <article class="btn btn-info active mb-2" id="instancia_elemento" onclick='seleccionarInstancia({{ instancia | tojson | safe }})'>
-                  <input type="radio" name="options" autocomplete="off">
-                  <div class="media-body">
-                    <div class="article-metadata">                              
-                      <small class="text-light">{{ instancia.fecha }}</small>
-                    </div>
-                    <h2><a class="article-title">{{ instancia.nombre }}</a></h2>
+      
+      <div class="col-md-4" id="columna_instancias">
+        
+        <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
+          <ul class="list-group" style="width:100%">
+            {% for instancia in instancias %}
+              <!--Transformamos el diccionario de la instancia a JSON, <ignorar aviso de error>-->
+              <article class="btn btn-info active mb-2" id="instancia_elemento" onclick='seleccionarInstancia({{ instancia | tojson | safe }})'>
+                <input type="radio" name="options" autocomplete="off">
+                <div class="media-body">
+                  <div class="article-metadata">                              
+                    <small class="text-light">{{ instancia.fecha }}</small>
                   </div>
-                </article>
-              {% endfor %}
-            </ul>
-          </div>
+                  <h4><a class="article-title">{{ instancia.nombre }}</a></h4>
+                </div>
+              </article>
+            {% endfor %}
+          </ul>
         </div>
+        
+      </div>
+        
         <!-- Sección de Contenido de la Instancia -->
-        <div class="col-md-6" id="columna_contenido_instancias">
+        <div class="col-md-6"  id="columna_contenido_instancias">
             <div class="content-section" id = "content-section_intancias" >
                 <!--<h3 id="nombre_instancia">Nombre</h3>-->
                 
                 <form action="" method="POST">
                   {{ form_mod_instancia.csrf_token() }}
-                  <fieldset class="form-group">
+                  <fieldset class="form-group" style="height: 100%;">
                     <div class="form-group">
                       <input type="text" readonly class="form-control-plaintext" id="nombre_instancia" style="font-size: 1.75rem; font-weight: bold;" value="<Nombre>">
                     </div>
 
-                    <div class="form-group" style="height:100%;">
+                    <div class="form-group"  id = "form_group_contenido">
                       {{ form_mod_instancia.contenido.label(class="formcontrol-label") }}
                       {{ form_mod_instancia.contenido(id="contenido_instancia", style="height:80%", class="form-control") }}
                     </div>
@@ -113,7 +135,7 @@
     <div class="row mt-2" >
       <!--Modelo-->
       <div class="col-md-10">
-        <div class="content-section">
+        <div class="content-section p-0">
           <!--Informacion del modelo-->
           
             <div class="card">
