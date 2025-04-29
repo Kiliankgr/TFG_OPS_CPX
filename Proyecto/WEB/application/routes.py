@@ -12,6 +12,8 @@ RUTA_AL_MODELO = '../OPS_CPX/emir_cpx'
 RUTA_FICHERO_TMP = 'tmp.txt'
 RUTA_INSTANCIA_TMP = 'fichero_instancia_tmp.txt'
 RUTA_SALIDA_TMP = 'fichero_salida_tmp.txt'
+
+RUTA_TRABAJOS_SELECCIONADOS = 'trabajos_seleccionados.txt'
 @app.route("/")
 def home():
     return render_template('home.html') 
@@ -37,8 +39,9 @@ def mostrar_instancias():
         instancias.append(instancia)
     
     logs = obtener_logs()
-    print("Logs cotenido:")
-    print(logs[0]["contenido"])
+
+    #print("Logs cotenido:")
+    #print(logs[0]["contenido"])
 
     #Forms
     form_mod_instancia = Mod_Instancia_Form()

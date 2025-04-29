@@ -55,7 +55,19 @@ int processor(const string &ins_file,
 
     L_file << endl;
     L_file.close();
+    //Resultados 
+    cout << "Main.cpp: Valores de Y(trabajos seleccionados):\n";
+    write_results_y(Out.y_,"fe");
+    return 0;
+}
 
+int write_results_y(vector<int> works, string out_file_name){
+    ofstream out_file(out_file_name, std::ios_base::app);
+    out_file << "[ ";
+    for(auto elem: works) {
+        out_file << "\"" << elem << "\"";
+    }
+    out_file << " ]";
     return 0;
 }
 
@@ -85,7 +97,7 @@ int main(int argc, char **argv)
     }
     
 
-    if (argc == 4) {
+    if (argc == 5) {
         /*
          *  argv[1]       Target file       - Fichero temporal
          *  argv[2]       Instance file     - Instacia con los parametros de los objetos y varillas(distancias entre ellos, ubicación, tiempo...)
@@ -94,6 +106,7 @@ int main(int argc, char **argv)
         const string sta_file(argv[1]);
         const string ins_file(argv[2]);
         const string log_file(argv[3]);
+        const string works_file(argv[3]);
         
         const int id = 0;
         
