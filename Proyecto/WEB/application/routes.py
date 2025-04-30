@@ -13,7 +13,8 @@ RUTA_FICHERO_TMP = 'tmp.txt'
 RUTA_INSTANCIA_TMP = 'fichero_instancia_tmp.txt'
 RUTA_SALIDA_TMP = 'fichero_salida_tmp.txt'
 
-RUTA_TRABAJOS_SELECCIONADOS = 'trabajos_seleccionados.txt'
+RUTA_TRABAJOS_SELECCIONADOS_TMP = 'trabajos_seleccionados.txt'
+RUTA_MOMENTOS_OBSERVACION_TMP = 'momentos_observacion.txt'
 @app.route("/")
 def home():
     return render_template('home.html') 
