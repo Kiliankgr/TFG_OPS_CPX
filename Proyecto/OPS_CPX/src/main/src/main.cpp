@@ -12,11 +12,15 @@
 
 #include "solvers.hpp"
 
+using ordered_json = nlohmann::json;
 using namespace std;
 using namespace EMIR;
-
+/*
 void write_results_works(std::vector<int> works, std::string out_file_name);
 void write_results_times(vector<double> times, string out_file_name);
+*/
+void write_results(OPS_output_t out_ops, string file_name);
+void obtain_only_selected_elements(vector<int> &obj_seleccionados, vector<double> &momentos_seleccionados);
 
 void read(const string &file_name, OPS_instance_t &instance)
 {
@@ -30,8 +34,7 @@ void read(const string &file_name, OPS_instance_t &instance)
 int processor(const string &ins_file,
               const string &sta_file,
               const string &log_file,
-              const string &works_file,
-              const string &times_file,
+              const string &results_file,
               const int id)
 {
     //Leemos y obtenemos los datos del fichero instancia
@@ -48,20 +51,23 @@ int processor(const string &ins_file,
 
     (*solver_array[id])(&In, tol, Out, L_file, O_file);
     //Quitar, resulta que solo erab información "boba", nombre del fichero instancia, coste optimo estimado,precisión, si se encontró, si era optimo
-    cout  << "\n Veamos que se escribe aqui---------------------------\n";
+    /*cout  << "\n Veamos que se escribe aqui---------------------------\n";
     Out.write_statistics(std::cout);
     cout  << "\n Veamos que se escribe aqui---------------------------\n";
     In.write_statistics(std::cout);
     cout  << "\n Veamos que se escribe aqui---------------------------\n";
     In.write_statistics_hdr(std::cout);
-    
+    */
     O_file << endl;
     O_file.close();
 
     L_file << endl;
     L_file.close();
     //Resultados 
-    cout << "Main.cpp: Valores de Y(trabajos seleccionados):\n";
+    if ( results_file != "NONE") {
+        write_results(Out, results_file);
+    }
+    /*cout << "Main.cpp: Valores de Y(trabajos seleccionados):\n";
     if ( works_file != "NONE") {
         write_results_works(Out.y_, works_file);
     }
@@ -69,11 +75,59 @@ int processor(const string &ins_file,
     if ( times_file != "NONE") {
         cout << "Escribir resultados";
         write_results_times(Out.s_, times_file);
-    }
+    }*/
     
     return 0;
 }
 
+void write_results(OPS_output_t out_ops, string file_name) {
+    double total = 0;
+    for(auto elem: out_ops.s_) {
+        total += elem;
+    }
+    cout << "\nTotal: " << total << endl;
+    ordered_json j;
+    j["numero"] = out_ops.get_obj(); //Cambiar nombre
+    // Al parecer hay un problema con como se guarda, debemos mover los elementos un slot para que concuerden 1 =>2 ultimo =>primero
+    vector <int> obj_seleccionados;
+    /*
+    obj_seleccionados.push_back(out_ops.y_[out_ops.y_.size() -1]);
+
+    for ( int i = 1 ; i < out_ops.y_.size() - 1; i++) {
+        obj_seleccionados.push_back(out_ops.y_[i]);
+    }
+    */
+    if (out_ops.y_.empty()) return;
+    obj_seleccionados.resize(out_ops.y_.size());
+    int ultimo = out_ops.y_.back();  // Guardamos el último
+    for (int i = out_ops.y_.size() - 1; i > 0; --i) {
+        obj_seleccionados[i] = out_ops.y_[i - 1];  // Cada elemento toma el valor del anterior
+    }
+    obj_seleccionados[0] = ultimo;
+    vector <double> momentos_seleccionados = out_ops.s_;
+    //vamos a guardar solo los elementos sellcionados por ende eliminamos los que no, y guardamos los que sí por su valor numérico
+    obtain_only_selected_elements(obj_seleccionados, momentos_seleccionados);
+    j["objetos_seleccionados"] = obj_seleccionados;
+    j["momento_seleccionado"] = momentos_seleccionados;
+
+    ofstream out_file(file_name);  
+    out_file << j.dump(4); 
+    out_file.close();
+}
+
+void obtain_only_selected_elements(vector<int> &_obj_seleccionados, vector<double> &_momentos_seleccionados) {
+    vector <int> new_obj_seleccionados;
+    vector <double> new_momentos_seleccionados;
+    for (int i = 0; i < _obj_seleccionados.size(); i++) {
+        if(_obj_seleccionados[i] == 1) {
+            new_obj_seleccionados.push_back(i+1); //pasamos la posicion, como el número del obj
+            new_momentos_seleccionados.push_back(_momentos_seleccionados[i]);
+        }
+    }
+    _obj_seleccionados = new_obj_seleccionados;
+    _momentos_seleccionados = new_momentos_seleccionados;
+}
+/*
 void write_results_times(vector<double> times, string out_file_name){
     ofstream out_file(out_file_name);
     out_file << "[ ";
@@ -95,7 +149,7 @@ void write_results_works(vector<int> works, string out_file_name){
     out_file << endl;
     out_file.close();
 }
-
+*/
 int main(int argc, char **argv)
 {
     int exit_code = 0;
@@ -106,7 +160,7 @@ int main(int argc, char **argv)
                     " \"temp_file\": Fichero temporal el cual se usará para ciertos cálculos\n" <<
                     " \"instace_file\": Fichero con la instancia del problema\n" <<
                     " \"output_log_file\": Fichero de salida con el resultado\n"
-                    " \"resultados_seleccionados_file\": Fichero de salida con los objetos seleccionados\n";
+                    " \"resultados_seleccionados_file\": Fichero de salida con los objetos seleccionados,tiempo ...\n";
         return exit_code;
     }
     
@@ -119,16 +173,14 @@ int main(int argc, char **argv)
         const string sta_file(argv[1]);
         const string ins_file(argv[2]);
         const string log_file(argv[3]);
-        const string works_file("NONE");
-        const string times_file("NONE");
+        const string results_file("NONE");
         
         const int id = 0;
         
         exit_code = processor(ins_file,
                               sta_file,
                               log_file,
-                              works_file,
-                              times_file,
+                              results_file,
                               id);
         
         return exit_code;
@@ -143,40 +195,14 @@ int main(int argc, char **argv)
         const string sta_file(argv[1]);
         const string ins_file(argv[2]);
         const string log_file(argv[3]);
-        const string works_file(argv[4]);
-        const string times_file("NONE");
+        const string results_file(argv[4]);
         cout << "\n5 Argumentos \n";
         const int id = 0;
         
         exit_code = processor(ins_file,
                               sta_file,
                               log_file,
-                              works_file,
-                              times_file,
-                              id);
-        
-        return exit_code;
-    }
-
-    if (argc == 6) {
-        /*
-         *  argv[1]       Target file       - Fichero temporal
-         *  argv[2]       Instance file     - Instacia con los parametros de los objetos y varillas(distancias entre ellos, ubicación, tiempo...)
-         *  argv[3]       Output log file   - Fichero con información acerca del tiempo de ejecución soluciones ...
-         */
-        const string sta_file(argv[1]);
-        const string ins_file(argv[2]);
-        const string log_file(argv[3]);
-        const string works_file(argv[4]);
-        const string times_file(argv[5]);
-        cout << "\n6 Argumentos \n";
-        const int id = 0;
-        
-        exit_code = processor(ins_file,
-                              sta_file,
-                              log_file,
-                              works_file,
-                              times_file,
+                              results_file,
                               id);
         
         return exit_code;
