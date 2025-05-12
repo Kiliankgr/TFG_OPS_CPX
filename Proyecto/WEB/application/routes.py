@@ -13,8 +13,8 @@ RUTA_FICHERO_TMP = 'tmp.txt'
 RUTA_INSTANCIA_TMP = 'fichero_instancia_tmp.txt'
 RUTA_SALIDA_TMP = 'fichero_salida_tmp.txt'
 
-RUTA_TRABAJOS_SELECCIONADOS_TMP = 'trabajos_seleccionados.txt'
-RUTA_MOMENTOS_OBSERVACION_TMP = 'momentos_observacion.txt'
+RUTA_RESULTADOS_TMP = 'resultados_tmp.txt'
+
 @app.route("/")
 def home():
     return render_template('home.html') 
@@ -72,8 +72,12 @@ def mostrar_instancias():
                         json.dump(instancia["contenido"], file, indent=2)
                     f_salida = open(RUTA_SALIDA_TMP, "w") #revisar si son nesesarios crearlo antes
                     f_tmp.close()
-                    f_salida.close()                    
-                    ejecutar_modelo(instancia["_id"],RUTA_AL_MODELO, RUTA_FICHERO_TMP, RUTA_INSTANCIA_TMP, RUTA_SALIDA_TMP)
+                    f_salida.close()        
+
+                    f_resultados = open(RUTA_RESULTADOS_TMP, "w") #revisar si son nesesarios crearlo antes         
+                    f_resultados.close()
+
+                    ejecutar_modelo(instancia["_id"],RUTA_AL_MODELO, RUTA_FICHERO_TMP, RUTA_INSTANCIA_TMP, RUTA_SALIDA_TMP, RUTA_RESULTADOS_TMP)
                     logs = obtener_logs()                    
                     
             #Para ello deberemos por ahora de crear una serie de ficheros temporales para pasarles el contenido al modelo                    
@@ -94,8 +98,9 @@ def obtener_logs():
         log["_id"] = str(log["_id"])
         log["nombre"] = str(log["nombre"])
         log = convert_objectid_to_str(log)
-        contenido_array = log.get("contenido", [])        
-        log["contenido"] = '\n'.join(contenido_array)
+        contenido_array = log.get("resumen_contenido", [])        
+        log["resumen_contenido"] = '\n'.join(contenido_array)
+        
         logs.append(log)
     return logs
 
@@ -152,7 +157,7 @@ def add_instancias():
                 "nombre" : add_instancia_nombre, 
                 "fecha" : fecha_actual,
                 "contenido" : contenido_json
-            })
+            })            
             #Mensaje al usuario
             flash("Instancia añadida correctamente", "success") # No veo que se muestre el mensaje revisar
         except json.JSONDecodeError as e:
@@ -182,18 +187,22 @@ def ejecutar_modelo(instancia_id, ruta_del_programa, *args):
         #comprobamos que se ha generado la solución si el fichero está vacío mandamos error
         print("Fichero: " + str(args[2]))
         print("Tamañofichero vacio: " +str(os.stat(args[2]).st_size == 0))
-
+        print("Tamañofichero vacio: " +str(os.stat(args[3]).st_size == 0))
         #Comprobamos el tamaño del fichero para saber si este se ha escrito
         if(os.stat(args[2]).st_size == 0):
             flash("Hubo un error al ejecutar el modelo, no salieron resultados, compruebe el contenido del fichero instancia:", "error")
             return f"No se ha podido ejecutar el modelo, comprueba el formato de la instancia"
+        print(resultado.stdout)
+        if(os.stat(args[3]).st_size == 0):
+            flash("Hubo un error al ejecutar el modelo, no salieron resultados con los objetos resultantes, compruebe el contenido del fichero instancia:", "error")
+            return f"No se ha podido ejecutar el modelo, no salieron resultados con los objetos resultantes, comprueba el formato de la instancia"
         print(resultado.stdout)
         #se entiende que si se ha llegado aquí todo ha ido bien
         
         flash("Se ha ejecutado el modelo de manera correcta","success")
 
         #Guardamos el modelo en la base de datos y eliminamos el modelo viejo si existiese
-        guardar_resultados_modelo(instancia_id, str(args[2]))
+        guardar_resultados_modelo(instancia_id, str(args[2]), str(args[3]))
         #Mensaje al usuario
         flash("Modelo  ejecutado correctamente y guardado en la instancia correspondiente", "success") 
         return resultado.stdout  # O puedes retornar resultado si quieres incluir stderr y más información
@@ -222,7 +231,7 @@ def eliminar_modelo_si_existe(instancia_id):
     return False
 
     
-def guardar_resultados_modelo(instancia_id, ruta_fichero_informacion):
+def guardar_resultados_modelo(instancia_id, ruta_fichero_contenido, ruta_fichero_resultados):
     try:
         #obtenemos la información de la instancia utilizada
         object_id = ObjectId(instancia_id)
@@ -230,8 +239,8 @@ def guardar_resultados_modelo(instancia_id, ruta_fichero_informacion):
         instancia_usada = db.Instancias.find_one({"_id": object_id})
         
         #transformamos el contenido del fichero a JSON
-        with open(ruta_fichero_informacion, 'r') as file:
-            contenido = file.read().splitlines()
+        with open(ruta_fichero_contenido, 'r') as file:
+            resumen_contenido = file.read().splitlines()
         
         
         nombre_modelo = instancia_usada.get("nombre") + "_" + str(instancia_usada.get("fecha"))
@@ -242,13 +251,27 @@ def guardar_resultados_modelo(instancia_id, ruta_fichero_informacion):
         fecha_actual = time.strftime('%Y-%m-%d_%H:%M:%S')   
         #pymongo flask, insertamos en la coleccion Instancias
         
+
+        with open(ruta_fichero_resultados, 'r') as archivo:
+            resultados = json.load(archivo)
+
+        # separamos la información recabada
+        momento_seleccionado = resultados["momento_seleccionado"]
+        tiempo = resultados["tiempo"]
+        objetos_seleccionados = resultados["objetos_seleccionados"]
+
         #Eliminamos los modelos antiguos y guardamos el nuevo
         eliminar_modelo_si_existe(instancia_id)
+
+        
 
         db.Logs.insert_one({
             "nombre" : nombre_modelo, 
             "fecha" : fecha_actual,
-            "contenido" : contenido,
+            "objetos_seleccionados" : objetos_seleccionados,
+            "momento_seleccionado" : momento_seleccionado,
+            "tiempo" : tiempo,
+            "resumen_contenido" : resumen_contenido,
             "instancia_id" : instancia_id
         })
         

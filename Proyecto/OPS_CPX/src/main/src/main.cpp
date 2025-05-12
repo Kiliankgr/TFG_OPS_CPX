@@ -87,7 +87,7 @@ void write_results(OPS_output_t out_ops, string file_name) {
     }
     cout << "\nTotal: " << total << endl;
     ordered_json j;
-    j["numero"] = out_ops.get_obj(); //Cambiar nombre
+    j["tiempo"] = out_ops.get_obj(); //Cambiar nombre
     // Al parecer hay un problema con como se guarda, debemos mover los elementos un slot para que concuerden 1 =>2 ultimo =>primero
     vector <int> obj_seleccionados;
     /*
