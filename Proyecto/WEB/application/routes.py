@@ -257,7 +257,7 @@ def guardar_resultados_modelo(instancia_id, ruta_fichero_contenido, ruta_fichero
 
         # separamos la información recabada
         momento_seleccionado = resultados["momento_seleccionado"]
-        tiempo = resultados["tiempo"]
+        valor_beneficio = resultados["valor_beneficio"]
         objetos_seleccionados = resultados["objetos_seleccionados"]
 
         #Eliminamos los modelos antiguos y guardamos el nuevo
@@ -270,7 +270,7 @@ def guardar_resultados_modelo(instancia_id, ruta_fichero_contenido, ruta_fichero
             "fecha" : fecha_actual,
             "objetos_seleccionados" : objetos_seleccionados,
             "momento_seleccionado" : momento_seleccionado,
-            "tiempo" : tiempo,
+            "valor_beneficio" : valor_beneficio,
             "resumen_contenido" : resumen_contenido,
             "instancia_id" : instancia_id
         })

@@ -148,24 +148,24 @@
               </div>
               <div class="card-body">
                 <div class="row ml-1">    
-                  <h4 class="card-title font-weight-bold">Nombre Modelo: </h4> <p class="card-text"></p>
-                  <h4 class="card-title" id="nombre_modelo">a</h4>
+                  <h4 class="card-title font-weight-bold" >Nombre Modelo: </h4> 
+                  <h4 class="card-title" id="nombre_modelo"></h4>
                 </div>
                 <div class="row ml-1">    
                   <p class="card-text font-weight-bold">Fecha de creación: <span id="fecha-creacion"></span></p>
-                  <p class="card-text" id="fecha_modelo">a</p>
+                  <p class="card-text" id="fecha_modelo"></p>
                 </div>
                 <div class="row ml-1">    
                   <p class="card-text font-weight-bold"> Duración: </p>
-                  <p class="card-text" id="duracion_modelo">a</p>
+                  <p class="card-text" id="duracion_modelo"></p>
                 </div>
                 <div class="row ml-1">    
                   <p class="card-text font-weight-bold">Objetos seleccionados: </p>
-                  <p class="card-text" id="objetos_seleccionados_modelo">a</p>
+                  <p class="card-text" id="objetos_seleccionados_modelo"></p>
                 </div>
                 <div class="row ml-1">    
-                  <p class="card-text font-weight-bold">Momento de su seleccion: </p>
-                  <p class="card-text" id="momentos_seleccionados_modelo">a</p>
+                  <p class="card-text font-weight-bold">Instante de su seleccion: </p>
+                  <p class="card-text" id="momentos_seleccionados_modelo"></p>
                 </div>
                 <div class="row ml-1">    
                   <p class="card-text font-weight-bold">Contenido:</p>
@@ -182,18 +182,39 @@
         <ul class="list-group">
             <button type="button" class="btn btn-primary mb-2" id="descargar_modelo_btn" data-bs-toggle="tooltip" title="Se descargará el resultado del modelo" disabled>Descargar</button>
             <button type="button" class="btn btn-danger mb-2" id="eliminar_modelo_btn" data-bs-toggle="tooltip" title="Se eliminará el resultado del modelo" disabled>Eliminar</button>
+            <button type="button" class="btn btn-danger mb-2" id="mostrar_grafica_modelo_btn"  data-bs-toggle="modal" data-bs-target="#grafico_modal"
+             title="Se mostrará una gráfica con los objetos seleccionados del modelo" disabled>Gráfica</button>
         </ul>
       </div>
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="grafico_modal" tabindex="-1" aria-labelledby="graficoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="graficoModalLabel">Gráfica de Ejemplo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <canvas id="miGrafica" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
 
 
+
+<script type="text/javascript">
+  var logs = {{ logs|tojson }};
+  var modelo_seleccionado_actualmente;
+</script>
 
 <!-- Pasar la variable 'instancias' al cliente como JSON -->
 <script type="text/javascript">
-  var logs = {{ logs|tojson }};
-
+  
+  
   function seleccionarInstancia(instancia) {
     
     // Actualizar el contenido del formulario
@@ -209,29 +230,40 @@
     document.getElementById("descargar_instancia_btn").disabled = false;
     document.getElementById("descargar_modelo_btn").disabled = false;
     document.getElementById("eliminar_modelo_btn").disabled = false;
+    document.getElementById("mostrar_grafica_modelo_btn").disabled = false;
+    
     
     //Buscamos si existe un log ya con el contenido
-    var log = logs.find(function(log) {
-      return log.instancia_id === instancia._id;
-    });
+    modelo_seleccionado_actualmente = logs.find(function(seleccionado) {
+      return seleccionado.instancia_id === instancia._id; 
+    }); 
     
-    if (log) {
+    
+    if (modelo_seleccionado_actualmente) {
       //logElemento.style.display = 'block';
-      document.getElementById("nombre_modelo").textContent = log.nombre;
-      document.getElementById("fecha_modelo").textContent = log.fecha;
-      document.getElementById("duracion_modelo").textContent = log.tiempo;
-    // Actualizar el elemento con el contenido del log, si se encuentra
-      document.getElementById("contenido_modelo").value= log.resumen_contenido;
+      document.getElementById("nombre_modelo").textContent = modelo_seleccionado_actualmente.nombre;
+      document.getElementById("fecha_modelo").textContent = modelo_seleccionado_actualmente.fecha;
+      document.getElementById("duracion_modelo").textContent = modelo_seleccionado_actualmente.valor_beneficio;
+    
+      document.getElementById("objetos_seleccionados_modelo").textContent= modelo_seleccionado_actualmente.objetos_seleccionados;
+      document.getElementById("momentos_seleccionados_modelo").textContent= modelo_seleccionado_actualmente.momento_seleccionado;
+      document.getElementById("contenido_modelo").value= modelo_seleccionado_actualmente.resumen_contenido;
+
     } else {
       document.getElementById("nombre_modelo").textContent = "<No se ha ejecutado el modelo para esta instancia>";
       document.getElementById("fecha_modelo").textContent = "";
-    // Actualizar el elemento con el contenido del log, si se encuentra
+      document.getElementById("duracion_modelo").textContent = "";
+
+    
+      document.getElementById("objetos_seleccionados_modelo").textContent= "";
+      document.getElementById("momentos_seleccionados_modelo").textContent= "";
       document.getElementById("contenido_modelo").value= "";
       document.getElementById("descargar_modelo_btn").disabled = true;
       document.getElementById("eliminar_modelo_btn").disabled = true;
+      document.getElementById("mostrar_grafica_modelo_btn").disabled = true;
     }
-    
   }
+  
 </script>
 
 <!--Evento para eliminar instancias-->
@@ -357,10 +389,183 @@
 </script>
 
 
+<!-- Script para crear la gráfica cuando se abre el modal 
+<script>
+  let graficaInicializada = false;
+
+  const modal = document.getElementById('grafico_modal');
+  modal.addEventListener('shown.bs.modal', function () {
+    if (!graficaInicializada) {
+      const ctx = document.getElementById('miGrafica').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+          datasets: [{
+            label: 'Ventas',
+            data: [12, 19, 3, 5, 2],
+            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+      graficaInicializada = true;
+    }
+  });
+</script>
+-->
+
+<script>
+  
+  // Datos 
+  
+  
+  /*var modelo_actualmente_seleccionado = logs.find(function(seleccionado) {
+    return seleccionado.instancia_id === id_instancia; 
+  }); 
+  
+  if (!modelo_seleccionado_actualmente) {
+    return ;
+  }*/
+  //modelo_actualmente_seleccionado = logs.find(log => log._id === document.getElementById('identificador_seleccionado').value);
+
+  
+  
+  
+  //modelo_actualmente_seleccionado = logs.find(log => log._id === document.getElementById('identificador_seleccionado').value);
+  /*const objetos_seleccionados = logs["objetos_seleccionados"];
+  const momentos = logs["momento_seleccionado"];
+  document.getElementById("nombre_modelo").textContent = log.nombre;
+  
+  
+  
+  
+  /*
+  
+  // Convertimos en datos para Chart.js
+  const datos = objetos_seleccionados.map((obj, index) => ({
+      x: momentos[index],
+      y: obj
+  }));
+  /*
+  const config = {
+      type: 'scatter',
+      data: {
+          datasets: [{
+              label: 'Objeto vs Momento',
+              data: datos,
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          }]
+      },
+      options: {
+          scales: {
+              x: {
+                  title: {
+                      display: true,
+                      text: 'Momento Seleccionado'
+                  }
+              },
+              y: {
+                  title: {
+                      display: true,
+                      text: 'Objeto Seleccionado'
+                  },
+                  ticks: {
+                      precision: 0
+                  }
+              }
+          }
+      }
+  };
+
+  */
+  let graficaInicializada = false;
+  // evento que para detectar
+  const modal = document.getElementById('grafico_modal');
+  modal.addEventListener('shown.bs.modal', function () {
+    if (!graficaInicializada) {
+      document.getElementById("graficoModalLabel").textContent = "Probando: " + modelo_seleccionado_actualmente.nombre;
+      const objetos_seleccionados = modelo_seleccionado_actualmente["objetos_seleccionados"];
+      const momentos = modelo_seleccionado_actualmente["momento_seleccionado"];
+
+        // Convertimos en datos para Chart.js
+      const datos = objetos_seleccionados.map((obj, index) => ({
+        x: momentos[index],
+        y: obj
+      }));
+
+      const config = {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Objeto vs Momento',
+                data: datos,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Momento Seleccionado'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Objeto Seleccionado'
+                    },
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+      };
+      new Chart(document.getElementById('miGrafica'), config);
+      /*const ctx = document.getElementById('miGrafica').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+          datasets: [{
+            label: 'Ventas',
+            data: [12, 19, 3, 5, 2],
+            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });*/
+      graficaInicializada = true;
+    }
+  });
+</script>
+
+
+
+
+<!-- Bootstrap CSS Me gustan algunos cambios otros no, ya miraré en el futuro una hoja de estilo
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+-->
+
+<!-- Bootstrap JS Bundle (con Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </html>
 {% endblock content %}
