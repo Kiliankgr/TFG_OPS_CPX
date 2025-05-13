@@ -77,7 +77,7 @@
 
                     <div class="form-group"  id = "form_group_contenido">
                       {{ form_mod_instancia.contenido.label(class="formcontrol-label") }}
-                      {{ form_mod_instancia.contenido(id="contenido_instancia", style="height:80%", class="form-control") }}
+                      {{ form_mod_instancia.contenido(id="contenido_instancia", style="height:80%; resize: none;", class="form-control") }}
                     </div>
                     <div class="form-group">
                       {{ form_mod_instancia.modificar_btn(class="btn btn-outline-info") }}
@@ -156,9 +156,21 @@
                   <p class="card-text" id="fecha_modelo">a</p>
                 </div>
                 <div class="row ml-1">    
+                  <p class="card-text font-weight-bold"> Duración: </p>
+                  <p class="card-text" id="duracion_modelo">a</p>
+                </div>
+                <div class="row ml-1">    
+                  <p class="card-text font-weight-bold">Objetos seleccionados: </p>
+                  <p class="card-text" id="objetos_seleccionados_modelo">a</p>
+                </div>
+                <div class="row ml-1">    
+                  <p class="card-text font-weight-bold">Momento de su seleccion: </p>
+                  <p class="card-text" id="momentos_seleccionados_modelo">a</p>
+                </div>
+                <div class="row ml-1">    
                   <p class="card-text font-weight-bold">Contenido:</p>
                 </div>          
-                <textarea class="form-control" id="contenido_modelo" rows="10" readonly></textarea>
+                <textarea class="form-control" id="contenido_modelo" rows="10" readonly style="font-family: monospace; resize: none" min-height = "300px"></textarea>
               </div>
             </div>
           
@@ -207,8 +219,9 @@
       //logElemento.style.display = 'block';
       document.getElementById("nombre_modelo").textContent = log.nombre;
       document.getElementById("fecha_modelo").textContent = log.fecha;
+      document.getElementById("duracion_modelo").textContent = log.tiempo;
     // Actualizar el elemento con el contenido del log, si se encuentra
-      document.getElementById("contenido_modelo").value= log.contenido;
+      document.getElementById("contenido_modelo").value= log.resumen_contenido;
     } else {
       document.getElementById("nombre_modelo").textContent = "<No se ha ejecutado el modelo para esta instancia>";
       document.getElementById("fecha_modelo").textContent = "";

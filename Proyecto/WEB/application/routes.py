@@ -97,10 +97,10 @@ def obtener_logs():
         #retocamos algunos datos como el id para que sean enviados como strings
         log["_id"] = str(log["_id"])
         log["nombre"] = str(log["nombre"])
+        
         log = convert_objectid_to_str(log)
         contenido_array = log.get("resumen_contenido", [])        
         log["resumen_contenido"] = '\n'.join(contenido_array)
-        
         logs.append(log)
     return logs
 

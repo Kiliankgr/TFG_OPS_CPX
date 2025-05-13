@@ -79,24 +79,17 @@ int processor(const string &ins_file,
     
     return 0;
 }
-
+/*
 void write_results(OPS_output_t out_ops, string file_name) {
     double total = 0;
     for(auto elem: out_ops.s_) {
         total += elem;
     }
-    cout << "\nTotal: " << total << endl;
+    //cout << "\nTotal: " << total << endl;
     ordered_json j;
-    j["tiempo"] = out_ops.get_obj(); //Cambiar nombre
+    j["valor_beneficio"] = out_ops.get_obj(); //Cambiar nombre
     // Al parecer hay un problema con como se guarda, debemos mover los elementos un slot para que concuerden 1 =>2 ultimo =>primero
     vector <int> obj_seleccionados;
-    /*
-    obj_seleccionados.push_back(out_ops.y_[out_ops.y_.size() -1]);
-
-    for ( int i = 1 ; i < out_ops.y_.size() - 1; i++) {
-        obj_seleccionados.push_back(out_ops.y_[i]);
-    }
-    */
     if (out_ops.y_.empty()) return;
     obj_seleccionados.resize(out_ops.y_.size());
     int ultimo = out_ops.y_.back();  // Guardamos el último
@@ -106,7 +99,39 @@ void write_results(OPS_output_t out_ops, string file_name) {
     obj_seleccionados[0] = ultimo;
     vector <double> momentos_seleccionados = out_ops.s_;
     //vamos a guardar solo los elementos sellcionados por ende eliminamos los que no, y guardamos los que sí por su valor numérico
+    //obtain_only_selected_elements(obj_seleccionados, momentos_seleccionados);
+    j["objetos_seleccionados"] = obj_seleccionados;
+    j["momento_seleccionado"] = momentos_seleccionados;
+
+    ofstream out_file(file_name);  
+    out_file << j.dump(4); 
+    out_file.close();
+}
+*/
+void write_results(OPS_output_t out_ops, string file_name) {
+    ordered_json j;
+    j["valor_beneficio"] = out_ops.get_obj(); 
+    
+    vector <int> obj_seleccionados = out_ops.y_;
+    
+    // Al parecer hay un problema con como se guarda, debemos mover los elementos un slot para que concuerden 2 =>1 PRIMERO => ULTIMO
+    vector <double> momentos_seleccionados;
+    if (out_ops.s_.empty()) return;
+    
+    double valor_primero = out_ops.s_.back();  // Guardamos el  primero
+  
+
+    for (int i = 0; i < out_ops.s_.size() - 1; i++) {
+        momentos_seleccionados.push_back(out_ops.s_[i + 1]);  // Cada elemento toma el valor del siguiente
+    }
+
+    momentos_seleccionados.push_back(valor_primero);
+
+    
+    //vamos a guardar solo los elementos sellcionados por ende eliminamos los que no, y guardamos los que sí por su valor numérico
+
     obtain_only_selected_elements(obj_seleccionados, momentos_seleccionados);
+
     j["objetos_seleccionados"] = obj_seleccionados;
     j["momento_seleccionado"] = momentos_seleccionados;
 
@@ -117,39 +142,24 @@ void write_results(OPS_output_t out_ops, string file_name) {
 
 void obtain_only_selected_elements(vector<int> &_obj_seleccionados, vector<double> &_momentos_seleccionados) {
     vector <int> new_obj_seleccionados;
-    vector <double> new_momentos_seleccionados;
-    for (int i = 0; i < _obj_seleccionados.size(); i++) {
+    vector <double> new_momentos_seleccionados;  
+
+    
+    //Ignoraremos el primer y ultimo elemento ya que fueron elementos "falsos"
+    for (int i = 1; i < _obj_seleccionados.size() - 1; i++) {
         if(_obj_seleccionados[i] == 1) {
-            new_obj_seleccionados.push_back(i+1); //pasamos la posicion, como el número del obj
+            new_obj_seleccionados.push_back(i); //pasamos la posicion, como el número del obj tenemos en cuenta que como el primer elemento y ultimo no existen realmente elemento_en_cuestion = pos_en_vector
             new_momentos_seleccionados.push_back(_momentos_seleccionados[i]);
         }
     }
+    
     _obj_seleccionados = new_obj_seleccionados;
     _momentos_seleccionados = new_momentos_seleccionados;
-}
-/*
-void write_results_times(vector<double> times, string out_file_name){
-    ofstream out_file(out_file_name);
-    out_file << "[ ";
-    for(auto elem: times) {
-        out_file << "\"" << elem << "\"";
-    }
-    out_file << " ]";
-    out_file << endl;
-    out_file.close();
+
+    cout << "\nTamaño del vector" << _obj_seleccionados.size() << ", " << _momentos_seleccionados.size();
 }
 
-void write_results_works(vector<int> works, string out_file_name){
-    ofstream out_file(out_file_name);
-    out_file << "[ ";
-    for(auto elem: works) {
-        out_file << "\"" << elem << "\"";
-    }
-    out_file << " ]";
-    out_file << endl;
-    out_file.close();
-}
-*/
+
 int main(int argc, char **argv)
 {
     int exit_code = 0;
