@@ -22,9 +22,6 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 * MongoDB Atlas cluster [tutorial](https://www.mongodb.com/docs/atlas/getting-started/?_ga=2.90501273.2090826799.1716903787-609048103.1716903786&_gac=1.217694626.1716903787.EAIaIQobChMI7Yba-rywhgMVmKloCR0ckgIpEAAYASAAEgLMrPD_BwE)
 * **python3 -m pip install python-dotenv Flask-PyMongo Flask-PyMongo pymongo[srv]**
 
-## Notas 
-* Actualmente está testeado con el fichero ubicado en "/home/kilian/Escritorio/TFG/Proyecto/OPS_CPX/test_ins.txt" se modificará a posteriori para pasarlo por argumentos
-* Se creará un fichero .log con los resultados de la ejecución .
 
 ## TO DO
 * Manejo de errores
@@ -37,8 +34,30 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 ##
 
 * Arreglar base de datos tiempo cambiar a coste beneficio (hecho)
-* Cambiar el mensaje de carga, sutituir con un pop up de un modal
+* Cambiar el mensaje de carga, sutituir con un pop up de un modal /// ó /// bloquear solo los botones 
 * Arreglar front instancias overflow del texto (hecho)
+
+## REVISION
+Plantearse en un futuro eliminar el texto de Instancias en la pestaña de mostrar instancias
+
+##
+Añadir  instancia (hecho).
+Responsive (Hecho).
+(Para hacer ahora) utitlizar el span en lugar del p( para que no estén los espacios) (hecho)
+Alto del TexArea de añadir instancias igual al de añadir instancia.(hecho)
+Reestructurar el formato de la fecha (que se vea con el formato nuestro DD--MM--YY) (hecho)
+Ordenar instancias por fecha. (hecho)
+
+Añadir un botón que permita cambiar el orden de mostrar instancias por nombre o por fecha más reciente.
+Al probar la instancia, revisar el reenvío de formulario, que mantenga la instancia seleccionada si hubiese una (Importante, pero no realizar ahora).
+Sustituir el contenido de About por un manual, que explique el funcionamiento de la aplicación.
+Intercambiar la pestaña de OPS_CPX(Inicio) por el contenido de "instancias" , en el contenido de instancias se quedará el conetenido que hay al inicio (sutituir nombre de instancias por algo más adecuado).
+Ajustar el overflow del nombre del modelo al recuadro.
+Añadir una guía de usuario
+Permitir un modo oscuro a la web(No tan prioritario).
+Solucionar espacios entre líneas en la información del contenido (Se ven espacios más grandes entre líneas).
+Número de línea, al ver el contenido (Muy opcional, ya para el final)
+
 
 ## Funcionamiento del OPS
 * Se le pasan el fichero con la instancia y el fichero con la salida, así como un fichero temporal. 

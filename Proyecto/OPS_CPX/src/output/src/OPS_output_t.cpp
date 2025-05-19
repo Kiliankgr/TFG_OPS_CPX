@@ -526,7 +526,6 @@ OPS_output_t::get_obj(void) const
 	    {
 		
 		const double b = I_.OPS_input_t::get_b(j);
-		cout << "\nobjeto:" << y_[j] << " _ Beneficio: " << b;
 		obj += y_[j] * b;
 	    }
 

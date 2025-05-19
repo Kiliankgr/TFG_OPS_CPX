@@ -41,6 +41,13 @@
     overflow-wrap: break-word;   /* Compatibilidad adicional */
   }
 
+  #div_contenido_del_modelo #nombre_modelo {
+    
+    max-width: 100%;
+    word-wrap: break-word;        /* Fuerza el salto en palabras largas */
+    overflow-wrap: break-word;   /* Compatibilidad adicional */
+  }
+
 
   #a_nombre_instancia {
     display: inline-block;
@@ -60,7 +67,7 @@
 </style>
 
 <div class="container mt-5">
-    <h2 class="mb-4">Instancias</h2>
+    <h2 class="mb-4 mt-4">Instancias</h2>
     <div class="col">
     <div class="row">
       
@@ -73,8 +80,10 @@
               <article class="btn btn-info active mb-2" id="instancia_elemento" onclick='seleccionarInstancia({{ instancia | tojson | safe }})'>
                 <input type="radio" name="options" autocomplete="off">
                 <div class="media-body">
-                  <div class="article-metadata">                              
-                    <small class="text-light">{{ instancia.fecha }}</small>
+                  <!--<div class="article-metadata d-flex justify-content-between">-->
+                  <div class="article-metadata">
+                    <small class="text-light">{{ instancia.fecha.split("_")[0] }}</small>
+                    <small class="text-light">{{ instancia.fecha.split("_")[1] }}</small>
                   </div>
                   <h4><a class="article-title" id = "a_nombre_instancia">{{ instancia.nombre }}</a></h4>
                 </div>
@@ -170,27 +179,27 @@
               </div>
               <div class="card-body">
                 <div class="row ml-1">    
-                  <h4 class="card-title font-weight-bold mr-1" >Nombre Modelo: </h4> 
-                  <h4 class="card-title" id="nombre_modelo"></h4>
+                  <h4 class="card-title font-weight-bold mr-1" >Nombre Modelo:</h4> 
+                  <h4 class="card-title" id="nombre_modelo"></h4> <br>
                 </div>
                 <div class="row ml-1">    
-                  <p class="card-text font-weight-bold mr-1">Fecha de creación:<span id="fecha-creacion"></span></p>
-                  <p class="card-text" id="fecha_modelo"></p>
+                  <span class="card-text font-weight-bold mr-1" >Fecha de creación:</span>
+                  <p class="card-text" id="fecha_modelo"></p> <br>
                 </div>
                 <div class="row ml-1">    
-                  <p class="card-text font-weight-bold mr-1">Beneficio aportado:</p>
-                  <p class="card-text" id="beneficio_modelo"></p>
+                  <span class="card-text font-weight-bold mr-1">Beneficio aportado:</span>
+                  <p class="card-text" id="beneficio_modelo"></p> <br>
                 </div>
                 <div class="row ml-1">    
-                  <p class="card-text font-weight-bold mr-1">Objetos seleccionados: </p>
-                  <p class="card-text" id="objetos_seleccionados_modelo"></p>
+                  <span class="card-text font-weight-bold mr-1">Objetos seleccionados: </span>
+                  <p class="card-text" id="objetos_seleccionados_modelo"></p> <br>
                 </div>
                 <div class="row ml-1">    
-                  <p class="card-text font-weight-bold mr-1">Instante de su seleccion: </p>
-                  <p class="card-text" id="momentos_seleccionados_modelo"></p>
+                  <span class="card-text font-weight-bold mr-1">Instante de su seleccion:</span>
+                  <p class="card-text" id="momentos_seleccionados_modelo"></p> <br>
                 </div>
                 <div class="row ml-1">    
-                  <p class="card-text font-weight-bold mr-1">Contenido:</p>
+                  <p class="card-text font-weight-bold mr-1 mb-1">Contenido:</p>
                 </div>          
                 <textarea class="form-control" id="contenido_modelo" rows="10" readonly style="font-family: monospace; resize: none" min-height = "300px"></textarea>
               </div>
@@ -286,6 +295,7 @@
     if (modelo_seleccionado_actualmente) {
       //logElemento.style.display = 'block';
       document.getElementById("nombre_modelo").textContent = modelo_seleccionado_actualmente.nombre;
+      
       document.getElementById("fecha_modelo").textContent = modelo_seleccionado_actualmente.fecha;
 
       document.getElementById("beneficio_modelo").textContent = modelo_seleccionado_actualmente.valor_beneficio;
@@ -466,7 +476,6 @@
 -->
 
 <script>
-
   let graficaInicializada = false;
   // evento que para detectar
   const modal = document.getElementById('grafico_modal');
@@ -518,12 +527,9 @@
 </script>
 
 
-
-
-<!-- Bootstrap CSS Me gustan algunos cambios otros no, ya miraré en el futuro una hoja de estilo
+<!-- Bootstrap CSS Me gustan algunos cambios otros no, ya miraré en el futuro una hoja de estilo-->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<<<<<<< HEAD
- -->
+
 
 <!-- Bootstrap JS Bundle (con Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

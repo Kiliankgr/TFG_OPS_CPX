@@ -131,11 +131,7 @@ void write_results(OPS_output_t out_ops, string file_name) {
     //vamos a guardar solo los elementos sellcionados por ende eliminamos los que no, y guardamos los que sí por su valor numérico
 
     obtain_only_selected_elements(obj_seleccionados, momentos_seleccionados);
-    cout << "\nH: [";
-    for ( auto val : out_ops.h_) {
-        cout << val << endl;
-    }
-    cout << "]";
+    
 
     j["objetos_seleccionados"] = obj_seleccionados;
     j["momento_seleccionado"] = momentos_seleccionados;
@@ -161,7 +157,7 @@ void obtain_only_selected_elements(vector<int> &_obj_seleccionados, vector<doubl
     _obj_seleccionados = new_obj_seleccionados;
     _momentos_seleccionados = new_momentos_seleccionados;
 
-    cout << "\nTamaño del vector" << _obj_seleccionados.size() << ", " << _momentos_seleccionados.size();
+    //cout << "\nTamaño del vector" << _obj_seleccionados.size() << ", " << _momentos_seleccionados.size();
 }
 
 

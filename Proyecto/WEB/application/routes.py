@@ -32,7 +32,7 @@ def mostrar_instancias():
   
     instancias = []
     
-    for instancia in db.Instancias.find().sort("nombre"):
+    for instancia in db.Instancias.find().sort([("fecha", -1)]):
         #retocamos algunos datos como el id para que sean enviados como strings
         instancia["_id"] = str(instancia["_id"])
         instancia["nombre"] = str(instancia["nombre"])
@@ -92,7 +92,7 @@ def mostrar_instancias():
     return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs)
 
 def obtener_logs():
-    logs = []
+    logs = []        
     for log in db.Logs.find().sort("nombre"):
         #retocamos algunos datos como el id para que sean enviados como strings
         log["_id"] = str(log["_id"])
@@ -115,7 +115,7 @@ def modificar_instancia(form_mod_instancia):
         #Pasamos a Json el contenido
     try:
         contenido_json = json.loads(mod_instancia_contenido)
-        fecha_actual = time.strftime('%Y-%m-%d_%H:%M:%S')   
+        fecha_actual = time.strftime('%d-%m-%Y_%H:%M:%S')    
         #instancia = db.Instancias.find({"_id": identificador})
 
         
@@ -151,7 +151,8 @@ def add_instancias():
         #Pasamos a Json el contenido
         try:
             contenido_json = json.loads(add_instancia_contenido)
-            fecha_actual = time.strftime('%Y-%m-%d_%H:%M:%S')   
+            #fecha_actual = time.strftime('%Y-%m-%d_%H:%M:%S')   
+            fecha_actual = time.strftime('%d-%m-%Y_%H:%M:%S')   
             #pymongo flask, insertamos en la coleccion Instancias
             db.Instancias.insert_one({
                 "nombre" : add_instancia_nombre, 
@@ -248,7 +249,7 @@ def guardar_resultados_modelo(instancia_id, ruta_fichero_contenido, ruta_fichero
         
         
         #contenido_json = json.loads(add_instancia_contenido)
-        fecha_actual = time.strftime('%Y-%m-%d_%H:%M:%S')   
+        fecha_actual = time.strftime('%d-%m-%Y_%H:%M:%S')   
         #pymongo flask, insertamos en la coleccion Instancias
         
 
