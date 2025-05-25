@@ -33,6 +33,7 @@ def mostrar_instancias():
     #Comprobamos si hemos recibido alguna solicitud especifica desde el front
     criterio_orden = request.args.get("criterio_orden", default="fecha")
     
+    instancia_anteriormente_seleccionada = None
     instancias = []
     print("Criterio routes: " + criterio_orden)
     
@@ -102,7 +103,8 @@ def mostrar_instancias():
         print("Vamos a modificar una instancia")        
         form_mod_instancia = Mod_Instancia_Form(request.form)
         #necesitamos el id por ahora se me ocurre que se añada al form y que esté en oculto
-        modificar_instancia(form_mod_instancia)
+        instancia_anteriormente_seleccionada_id = modificar_instancia(form_mod_instancia)
+        
         #volvemos a obtener las instancias, ya que la informacion a cambiado, tal vez a futuro solo mod
         instancias = []
         if(criterio_orden == 'nombre'):
@@ -112,6 +114,8 @@ def mostrar_instancias():
                 instancia["nombre"] = str(instancia["nombre"])
                 instancia = convert_objectid_to_str(instancia)        
                 instancias.append(instancia)
+                if(instancia["_id"] == instancia_anteriormente_seleccionada_id):
+                    instancia_anteriormente_seleccionada = instancia
         else:
             #damos por hecho que es por fecha
             for instancia in db.Instancias.find().sort([(criterio_orden, -1)]):
@@ -120,10 +124,12 @@ def mostrar_instancias():
                 instancia["nombre"] = str(instancia["nombre"])
                 instancia = convert_objectid_to_str(instancia)        
                 instancias.append(instancia)
+                if(instancia["_id"] == instancia_anteriormente_seleccionada_id):
+                    instancia_anteriormente_seleccionada = instancia
         logs = obtener_logs()          
 
     #instance_id = request.form.get('id_instancia_a_eliminar')
-    return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs, instancia_anteriormente_seleccionada=None)
+    return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs, instancia_anteriormente_seleccionada=instancia_anteriormente_seleccionada)
 
 def obtener_logs():
     logs = []        
@@ -169,6 +175,7 @@ def modificar_instancia(form_mod_instancia):
     except json.JSONDecodeError as e:
         # Manejo de errores en caso de que el contenido no sea un JSON válido
         flash(f"Error, el contenido no tiene el formato JSON correcto:\n {e}", "error")
+    return identificador
 
 
 #Convertimos el object_id

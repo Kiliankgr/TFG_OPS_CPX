@@ -456,7 +456,7 @@
 
 <script>
   // Protegemos el bloque para evitar errores si es None
-  let ins_seleccionada_al_cargar = {{ instancia_anteriormente_seleccionada | tojson | default('null') }};
+  let ins_seleccionada_al_cargar = {{ instancia_anteriormente_seleccionada | tojson | default('null', true) }};
   
   if (ins_seleccionada_al_cargar) {
     console.log("Instancia previamente seleccionada:", ins_seleccionada_al_cargar);
