@@ -103,6 +103,23 @@ def mostrar_instancias():
         form_mod_instancia = Mod_Instancia_Form(request.form)
         #necesitamos el id por ahora se me ocurre que se añada al form y que esté en oculto
         modificar_instancia(form_mod_instancia)
+        #volvemos a obtener las instancias, ya que la informacion a cambiado, tal vez a futuro solo mod
+        instancias = []
+        if(criterio_orden == 'nombre'):
+            for instancia in db.Instancias.find().sort([("nombre", 1)]):
+                #retocamos algunos datos como el id para que sean enviados como strings
+                instancia["_id"] = str(instancia["_id"])
+                instancia["nombre"] = str(instancia["nombre"])
+                instancia = convert_objectid_to_str(instancia)        
+                instancias.append(instancia)
+        else:
+            #damos por hecho que es por fecha
+            for instancia in db.Instancias.find().sort([(criterio_orden, -1)]):
+                #retocamos algunos datos como el id para que sean enviados como strings
+                instancia["_id"] = str(instancia["_id"])
+                instancia["nombre"] = str(instancia["nombre"])
+                instancia = convert_objectid_to_str(instancia)        
+                instancias.append(instancia)
         logs = obtener_logs()          
 
     #instance_id = request.form.get('id_instancia_a_eliminar')
@@ -152,6 +169,7 @@ def modificar_instancia(form_mod_instancia):
     except json.JSONDecodeError as e:
         # Manejo de errores en caso de que el contenido no sea un JSON válido
         flash(f"Error, el contenido no tiene el formato JSON correcto:\n {e}", "error")
+
 
 #Convertimos el object_id
 def convert_objectid_to_str(instancia):
