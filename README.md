@@ -47,15 +47,15 @@ Responsive (Hecho).
 Alto del TexArea de añadir instancias igual al de añadir instancia.(hecho)
 Reestructurar el formato de la fecha (que se vea con el formato nuestro DD--MM--YY) (hecho)
 Ordenar instancias por fecha. (hecho)
+Añadir un botón que permita cambiar el orden de mostrar instancias por nombre o por fecha más reciente. (hecho)
+Intercambiar la pestaña de OPS_CPX(Inicio) por el contenido de "instancias" , en el contenido de instancias se quedará el conetenido que hay al inicio (sutituir nombre de instancias por algo más adecuado).(hecho)
+Ajustar el overflow del nombre del modelo al recuadro.(hecho)
+Solucionar espacios entre líneas en la información del contenido (Se ven espacios más grandes entre líneas).(hecho)
 
-Añadir un botón que permita cambiar el orden de mostrar instancias por nombre o por fecha más reciente.
 Al probar la instancia, revisar el reenvío de formulario, que mantenga la instancia seleccionada si hubiese una (Importante, pero no realizar ahora).
 Sustituir el contenido de About por un manual, que explique el funcionamiento de la aplicación.
-Intercambiar la pestaña de OPS_CPX(Inicio) por el contenido de "instancias" , en el contenido de instancias se quedará el conetenido que hay al inicio (sutituir nombre de instancias por algo más adecuado).
-Ajustar el overflow del nombre del modelo al recuadro.
 Añadir una guía de usuario
 Permitir un modo oscuro a la web(No tan prioritario).
-Solucionar espacios entre líneas en la información del contenido (Se ven espacios más grandes entre líneas).
 Número de línea, al ver el contenido (Muy opcional, ya para el final)
 
 

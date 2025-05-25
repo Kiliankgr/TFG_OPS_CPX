@@ -15,16 +15,16 @@ RUTA_SALIDA_TMP = 'fichero_salida_tmp.txt'
 
 RUTA_RESULTADOS_TMP = 'resultados_tmp.txt'
 
-@app.route("/")
-def home():
-    return render_template('home.html') 
+@app.route("/introduccion")
+def introduccion():
+    return render_template('introduccion.html') 
 
 @app.route("/about")
 def about():
     return render_template('about.html') 
 
 # Por ahora mostrará los instancias y permitirá modificar su contenido o añadir nuevos 
-@app.route("/mostrar_instancias", methods=["GET", "POST", "DELETE"])
+@app.route("/", methods=["GET", "POST", "DELETE"])
 def mostrar_instancias():
     estado_de_la_ultima_ejecucion_modelo = True #estará atento a la ultima ejecución del modelo
     #instancias = db.Instancias.find().sort("nombre")
