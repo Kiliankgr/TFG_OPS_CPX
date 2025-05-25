@@ -52,7 +52,7 @@ Intercambiar la pestaña de OPS_CPX(Inicio) por el contenido de "instancias" , e
 Ajustar el overflow del nombre del modelo al recuadro.(hecho)
 Solucionar espacios entre líneas en la información del contenido (Se ven espacios más grandes entre líneas).(hecho)
 
-Al probar la instancia, revisar el reenvío de formulario, que mantenga la instancia seleccionada si hubiese una (Importante, pero no realizar ahora).
+Al probar la instancia, revisar el reenvío de formulario, que mantenga la instancia seleccionada si hubiese una (Importante, pero no realizar ahora). (intentandolo, funciona se conserva la información, falta por conseguir que visualmente se siga viendo seleccionado/clickado el elemento)
 Sustituir el contenido de About por un manual, que explique el funcionamiento de la aplicación.
 Añadir una guía de usuario
 Permitir un modo oscuro a la web(No tan prioritario).

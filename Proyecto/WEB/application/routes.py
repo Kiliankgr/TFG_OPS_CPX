@@ -71,11 +71,15 @@ def mostrar_instancias():
             #Ejecutamos el modelo
             #ins = db.Instancias.find({"_id": ObjectId(request.form.get("id_instancia_a_probar"))}).next()
             #print(ins["contenido"])
-            instancia_anteriormente_seleccionada_id = request.form.get("id_instancia_a_probar")
+            id_instancia_seleccionada = request.form.get("id_instancia_a_probar")
+            
             for instancia in instancias:
                 
                 #print("ID: " + instancia["_id"], )
-                if instancia["_id"] == instancia_anteriormente_seleccionada_id:
+                if instancia["_id"] == id_instancia_seleccionada:
+                    instancia_anteriormente_seleccionada = instancia
+                    print("routes.py, instancia_seleccionada previa _nombre:" + instancia_anteriormente_seleccionada["nombre"] + ", ")
+                    print(type(instancia_anteriormente_seleccionada))
                     #flash("Se está ejecutando el modelo, porfavor tenga paciencia, el modelo puede tardar unos minutos. Una vez acabado se guardará en la instancia seleccionada","warning")
                     #Creamos ficheros temporales
                     f_tmp = open(RUTA_FICHERO_TMP, "w") #revisar si son nesesarios crearlo antes
@@ -93,7 +97,7 @@ def mostrar_instancias():
                     logs = obtener_logs()                    
                     
             #Para ello deberemos por ahora de crear una serie de ficheros temporales para pasarles el contenido al modelo                    
-            return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs, instancia_anteriormente_seleccionada_id = instancia_anteriormente_seleccionada_id)
+            return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs, instancia_anteriormente_seleccionada = instancia_anteriormente_seleccionada)
         
         print("Vamos a modificar una instancia")        
         form_mod_instancia = Mod_Instancia_Form(request.form)
@@ -102,7 +106,7 @@ def mostrar_instancias():
         logs = obtener_logs()          
 
     #instance_id = request.form.get('id_instancia_a_eliminar')
-    return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs)
+    return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs, instancia_anteriormente_seleccionada=None)
 
 def obtener_logs():
     logs = []        

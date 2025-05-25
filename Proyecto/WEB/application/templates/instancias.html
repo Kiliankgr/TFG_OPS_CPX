@@ -182,7 +182,7 @@
               <div class="card-body">
                 <div class="row ml-1">    
                   <h4 class="card-title font-weight-bold mr-1" >Nombre Modelo:</h4> 
-                  <h4 class="card-title" id="nombre_modelo"></h4>
+                  <h4 class="card-title" id="nombre_modelo"> </h4>
                 </div>
                 <hr style="width:100%;"> 
                 <div class="row ml-1">    
@@ -431,22 +431,52 @@
 
 <script>
   document.getElementById('probar_btn').addEventListener('click', function(event) {
-      // Evitar el envío del formulario para pruebas
-      //event.preventDefault();
+    // Evitar el envío del formulario para pruebas
+    //event.preventDefault();
 
-      // Desactivar el botón temporalmente cuidado, no se puede enviar el formulario si el botón se encuentra disabled.
-      //document.getElementById("probar_btn").disabled = true;
+    // Desactivar el botón temporalmente cuidado, no se puede enviar el formulario si el botón se encuentra disabled.
+    //document.getElementById("probar_btn").disabled = true;
 
-      // Generar el mensaje flash
-      const flashContainer = document.getElementById('flash_messages');
-      const flashMessage = document.createElement('div');
-      flashMessage.className = 'alert alert-info';
-      flashMessage.role = 'alert';
-      flashMessage.id = 'mensaje_flash_ejecutandose';
-      flashMessage.innerText = 'Se está ejecutando el modelo, puede tardar varios minutos, por favor sea paciente';
+    // Generar el mensaje flash
+    const flashContainer = document.getElementById('flash_messages');
+    const flashMessage = document.createElement('div');
+    flashMessage.className = 'alert alert-info';
+    flashMessage.role = 'alert';
+    flashMessage.id = 'mensaje_flash_ejecutandose';
+    flashMessage.innerText = 'Se está ejecutando el modelo, puede tardar varios minutos, por favor sea paciente';
 
-      flashContainer.appendChild(flashMessage);
+    flashContainer.appendChild(flashMessage);
+
+    
+      
   });
+</script>
+
+<!-- Encargado de hacer que se quede seleccionado la instancia seleccionada al recargar la página al ejecutar el modelo-->
+
+<script>
+  // Protegemos el bloque para evitar errores si es None
+  let ins_seleccionada_al_cargar = {{ instancia_anteriormente_seleccionada | tojson | default('null') }};
+  
+  if (ins_seleccionada_al_cargar) {
+    console.log("Instancia previamente seleccionada:", ins_seleccionada_al_cargar);
+    seleccionarInstancia(ins_seleccionada_al_cargar);
+    /* EN Proceso para que se quede seleccionado visualmente
+    const articulos = document.querySelectorAll("#columna_instancias article");
+
+    // Ahora buscamos el artículo correspondiente a la instancia seleccionada
+    const coincidencia = Array.from(articulos).find(art => {
+      // Buscar por nombre o id según cómo decidamos, probablemente por id, cambiar
+      const nombreElemento = art.querySelector(".article-title");
+      return nombreElemento?.textContent?.trim() === instancia.nombre;
+    });
+
+    if (coincidencia) {
+      coincidencia.classList.add("active");
+      coincidencia.classList.remove("btn-secondary");
+      coincidencia.classList.add("btn-info");
+    }*/
+  }
 </script>
 
 
