@@ -56,13 +56,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  /*
-  #div_contenido_del_modelo .p {
-    font-weight: bold;
-    /*max-width: 100%;
-    word-wrap: break-word;        /* Fuerza el salto en palabras largas */
-    /*overflow-wrap: break-word;   /* Compatibilidad adicional */
-  /*}*/
 
 </style>
 
@@ -487,53 +480,60 @@
 -->
 
 <script>
-  let graficaInicializada = false;
-  // evento que para detectar
-  const modal = document.getElementById('grafico_modal');
+  let instancia_de_grafica = null;
+
+  var modal = document.getElementById('grafico_modal');
   modal.addEventListener('shown.bs.modal', function () {
-    if (!graficaInicializada) {
-      document.getElementById("graficoModalLabel").textContent = "Probando: " + modelo_seleccionado_actualmente.nombre;
-      const objetos_seleccionados = modelo_seleccionado_actualmente["objetos_seleccionados"];
-      const momentos = modelo_seleccionado_actualmente["momento_seleccionado"];
+    // Actualizamos el título
+    document.getElementById("graficoModalLabel").textContent = "Probando: " + modelo_seleccionado_actualmente.nombre;
 
-        // Convertimos en datos para Chart.js
-      const datos = objetos_seleccionados.map((obj, index) => ({
-        x: momentos[index],
-        y: obj
-      }));
+    // Obtenemos los datos
+    var objetos_seleccionados = modelo_seleccionado_actualmente["objetos_seleccionados"];
+    var momentos = modelo_seleccionado_actualmente["momento_seleccionado"];
 
-      const config = {
-        type: 'scatter',
-        data: {
-            datasets: [{
-                label: 'Objeto vs Momento',
-                data: datos,
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Momento Seleccionado'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Objeto Seleccionado'
-                    },
-                    ticks: {
-                        precision: 0
-                    }
-                }
-            }
-        }
-      };
-      new Chart(document.getElementById('miGrafica'), config);
-      graficaInicializada = true;
+    var datos = objetos_seleccionados.map((obj, index) => ({
+      x: momentos[index],
+      y: obj
+    }));
+
+    // Si hay una gráfica anterior, la destruimos
+    if (instancia_de_grafica !== null) {
+      instancia_de_grafica.destroy();
     }
+
+    // Creamos una nueva gráfica
+    var config = {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Objeto vs Momento',
+          data: datos,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Momento Seleccionado'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Objeto Seleccionado'
+            },
+            ticks: {
+              precision: 0
+            }
+          }
+        }
+      }
+    };
+
+    // Guardamos la nueva instancia en la variable global
+    instancia_de_grafica = new Chart(document.getElementById('miGrafica'), config);
   });
 </script>
 <!--Primera prueba reordenamiento-->
