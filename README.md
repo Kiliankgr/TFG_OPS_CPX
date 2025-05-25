@@ -34,7 +34,7 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 ##
 
 * Arreglar base de datos tiempo cambiar a coste beneficio (hecho)
-* Cambiar el mensaje de carga, sutituir con un pop up de un modal /// ó /// bloquear solo los botones 
+* Cambiar el mensaje de carga, sutituir con un pop up de un modal /// ó /// bloquear solo los botones (hecho)
 * Arreglar front instancias overflow del texto (hecho)
 
 ## REVISION
@@ -57,6 +57,7 @@ Sustituir el contenido de About por un manual, que explique el funcionamiento de
 Añadir una guía de usuario
 Permitir un modo oscuro a la web(No tan prioritario).
 Número de línea, al ver el contenido (Muy opcional, ya para el final)
+
 
 
 ## Funcionamiento del OPS
