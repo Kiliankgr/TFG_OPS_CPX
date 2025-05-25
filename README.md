@@ -14,7 +14,7 @@ El desarrollo de la web será realizado mediante el uso de **Flask** un framewor
 * **sudo apt install python3.10-venv**
 * Creación de entorno **python3 -m venv venv**
 * Activar entorno **. venv/bin/activate**
-* 
+* Activar web **flask --app application/routes.py run --debug**
 
 ## Base de datos
 Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask

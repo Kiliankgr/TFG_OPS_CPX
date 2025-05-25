@@ -29,16 +29,27 @@ def mostrar_instancias():
     estado_de_la_ultima_ejecucion_modelo = True #estará atento a la ultima ejecución del modelo
     #instancias = db.Instancias.find().sort("nombre")
     #instancias = [convert_objectid_to_str(instancia) for instancia in instancias]
+    #Comprobamos si hemos recibido alguna solicitud especidica a la hora de tener ordenadas las instancias
+    criterio_orden = request.args.get("criterio_orden", default="fecha")
   
     instancias = []
+    print("Criterio routes: " + criterio_orden)
     
-    for instancia in db.Instancias.find().sort([("fecha", -1)]):
-        #retocamos algunos datos como el id para que sean enviados como strings
-        instancia["_id"] = str(instancia["_id"])
-        instancia["nombre"] = str(instancia["nombre"])
-        instancia = convert_objectid_to_str(instancia)        
-        instancias.append(instancia)
-    
+    if(criterio_orden == 'nombre'):
+        for instancia in db.Instancias.find().sort([("nombre", 1)]):
+            #retocamos algunos datos como el id para que sean enviados como strings
+            instancia["_id"] = str(instancia["_id"])
+            instancia["nombre"] = str(instancia["nombre"])
+            instancia = convert_objectid_to_str(instancia)        
+            instancias.append(instancia)
+    else:
+        #damos por hecho que es por fecha
+        for instancia in db.Instancias.find().sort([(criterio_orden, -1)]):
+            #retocamos algunos datos como el id para que sean enviados como strings
+            instancia["_id"] = str(instancia["_id"])
+            instancia["nombre"] = str(instancia["nombre"])
+            instancia = convert_objectid_to_str(instancia)        
+            instancias.append(instancia)
     logs = obtener_logs()
 
     #print("Logs cotenido:")

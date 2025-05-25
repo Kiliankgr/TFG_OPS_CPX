@@ -69,6 +69,15 @@
 <div class="container mt-5">
     <h2 class="mb-4 mt-4">Instancias</h2>
     <div class="col">
+      <div class="dropdown mb-3">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="ordenarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          Ordenar por
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="ordenarDropdown">
+          <li><a class="dropdown-item" href="#" onclick="ordenarPor('fecha')">Fecha</a></li>
+          <li><a class="dropdown-item" href="#" onclick="ordenarPor('nombre')">Nombre</a></li>
+        </ul>
+      </div>
     <div class="row">
       
       <div class="col-md-4" id="columna_instancias">
@@ -180,8 +189,9 @@
               <div class="card-body">
                 <div class="row ml-1">    
                   <h4 class="card-title font-weight-bold mr-1" >Nombre Modelo:</h4> 
-                  <h4 class="card-title" id="nombre_modelo"></h4> <br>
+                  <h4 class="card-title" id="nombre_modelo"></h4>
                 </div>
+                <hr style="width:100%;"> 
                 <div class="row ml-1">    
                   <span class="card-text font-weight-bold mr-1" >Fecha de creación:</span>
                   <p class="card-text" id="fecha_modelo"></p> <br>
@@ -260,6 +270,7 @@
 
 
 <script type="text/javascript">
+  var instancias_existentes = {{ instancias|tojson}}
   var logs = {{ logs|tojson }};
   var modelo_seleccionado_actualmente;
 </script>
@@ -524,6 +535,68 @@
       graficaInicializada = true;
     }
   });
+</script>
+<!--Primera prueba reordenamiento-->
+<!--
+<script>
+  function ordenarPor(criterio) {
+    /*if(criterio === "fecha") {
+      instancias_existentes = instancias_existentes.sort((a, b) => {
+        return a.nombre.localeCompare(b.nombre);
+      });
+      
+      
+    } 
+    if(criterio === "nombre") {
+
+      instancias_existentes = instancias_existentes.sort((a, b) => {
+        return a.nombre.localeCompare(b.nombre);
+      });
+      
+      
+    }*/
+    // Seleccionamos el contenedor donde están las instancias
+    const columna = document.getElementById("columna_instancias");
+
+    // Limpiamos el contenido anterior
+    columna.innerHTML = `
+      <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
+        <ul class="list-group" style="width:100%" id="lista_instancias">
+        </ul>
+      </div>
+    `;
+
+    const lista = document.getElementById("lista_instancias");
+
+    // Recorremos las instancias ordenadas e inyectamos el HTML
+    instancias_existentes.forEach(instancia => {
+      const [fecha, hora] = instancia.fecha.split("_");
+
+      const articleHTML = `
+        <article class="btn btn-info active mb-2" onclick='seleccionarInstancia(${JSON.stringify(instancia)})'>
+          <input type="radio" name="options" autocomplete="off">
+          <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between">
+              <small class="text-light">${fecha}</small>
+              <small class="text-light">${hora}</small>
+            </div>
+            <h4><a class="article-title">${instancia.nombre}</a></h4>
+          </div>
+        </article>
+      `;
+
+      lista.insertAdjacentHTML("beforeend", articleHTML);
+    });
+  }
+  //NOTA:: PROBABLEMENTe deberíamos de mandar a deshabilitar los botones como al recargar la pagina, asi como el contenido
+</script>
+-->
+<!--Segunda Prueba reordenamiento en lugar decambiar el contenido aquí mismo recargamos la página con el contenido nuevo-->
+<script>
+    function ordenarPor(criterio_orden) {
+      // Redirige a la ruta con el parámetro ?criterio=nombre o ?criterio=fecha
+      window.location.href = "/mostrar_instancias?criterio_orden=" + encodeURIComponent(criterio_orden)     
+    }
 </script>
 
 
