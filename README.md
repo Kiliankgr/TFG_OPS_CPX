@@ -23,44 +23,36 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 * **python3 -m pip install python-dotenv Flask-PyMongo Flask-PyMongo pymongo[srv]**
 
 
-## TO DO
-* Manejo de errores
-* Añadir interfaz con los nuevos datos
-* Sustituir los mensajes de ejecución del algoritmo por una "pantalla de carga", bloquear la ventana web mientras.
-* Mostrar instancia, el texto de los nombres de instancia no deberían de sobresalir
-* Remodelar la interfaz de instancias, no me termina de convencer el text area de modificar, tal vez lo de modificar que sea un pop up y alli se modifica, recolocar botones, añadir un filtro/buscador (dos opciones en esa misma interfaz o, modificamos la interfaz, quitamos la columna que muestra todos las intancias y añadimos un botoón  de seleccion que nos muestre todas las intancias en una ventana tipo como explorador de archivos).
+## IDEAS
+
 * Añadir transiciones o efectos a la hora de seleccionar ciertos elementos
 
-##
+## REVISION
 
 * Arreglar base de datos tiempo cambiar a coste beneficio (hecho)
 * Cambiar el mensaje de carga, sutituir con un pop up de un modal /// ó /// bloquear solo los botones (hecho)
 * Arreglar front instancias overflow del texto (hecho)
+* Añadir  instancia (hecho).
+* Responsive (Hecho).
+* (Para hacer ahora) utitlizar el span en lugar del p( para que no estén los espacios) (hecho)
+* Alto del TexArea de añadir instancias igual al de añadir instancia.(hecho)
+* Reestructurar el formato de la fecha (que se vea con el formato nuestro DD--MM--YY) (hecho)
+* Ordenar instancias por fecha. (hecho)
+* Añadir un botón que permita cambiar el orden de mostrar instancias por nombre o por fecha más reciente. (hecho)
+* Intercambiar la pestaña de OPS_CPX(Inicio) por el contenido de "instancias" , en el contenido de instancias se quedará el contenido que hay al inicio (sutituir nombre de instancias por algo más adecuado).(hecho)
+* Ajustar el overflow del nombre del modelo al recuadro.(hecho)
+* Solucionar espacios entre líneas en la información del contenido (Se ven espacios más grandes entre líneas).(hecho)
 
-## REVISION
-Plantearse en un futuro eliminar el texto de Instancias en la pestaña de mostrar instancias
-
-##
-Añadir  instancia (hecho).
-Responsive (Hecho).
-(Para hacer ahora) utitlizar el span en lugar del p( para que no estén los espacios) (hecho)
-Alto del TexArea de añadir instancias igual al de añadir instancia.(hecho)
-Reestructurar el formato de la fecha (que se vea con el formato nuestro DD--MM--YY) (hecho)
-Ordenar instancias por fecha. (hecho)
-Añadir un botón que permita cambiar el orden de mostrar instancias por nombre o por fecha más reciente. (hecho)
-Intercambiar la pestaña de OPS_CPX(Inicio) por el contenido de "instancias" , en el contenido de instancias se quedará el conetenido que hay al inicio (sutituir nombre de instancias por algo más adecuado).(hecho)
-Ajustar el overflow del nombre del modelo al recuadro.(hecho)
-Solucionar espacios entre líneas en la información del contenido (Se ven espacios más grandes entre líneas).(hecho)
-
-Al probar la instancia, revisar el reenvío de formulario, que mantenga la instancia seleccionada si hubiese una (Importante, pero no realizar ahora). (intentandolo, funciona se conserva la información, falta por conseguir que visualmente se siga viendo seleccionado/clickado el elemento)
-Sustituir el contenido de About por un manual, que explique el funcionamiento de la aplicación.
-Añadir una guía de usuario
-Permitir un modo oscuro a la web(No tan prioritario).
-Número de línea, al ver el contenido (Muy opcional, ya para el final)
+* Al probar la instancia, revisar el reenvío de formulario, que mantenga la instancia seleccionada si hubiese una (Importante, pero no realizar ahora). (intentandolo, funciona se conserva la información, falta por conseguir que visualmente se siga viendo seleccionado/clickado el elemento)
+* Sustituir el contenido de About por un manual, que explique el funcionamiento de la aplicación.
+* Añadir una guía de usuario
+* Permitir un modo oscuro a la web(No tan prioritario).
+* Número de línea, al ver el contenido (Muy opcional, ya para el final)
 
 
 
 ## Funcionamiento del OPS
+
 * Se le pasan el fichero con la instancia y el fichero con la salida, así como un fichero temporal. 
 * El programa genera un objeto con la información de la instancia con el fichero de instancia (OPS_instance)
 * Dicho objeto se le entrega al OPS_input, donde genera la estructura a partir de la información
