@@ -59,9 +59,9 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 
 
 ## References
-[](https://flask.palletsprojects.com/en/3.0.x/)
-[](https://flask.palletsprojects.com/en/3.0.x/deploying/)
-[](https://docs.python.org/es/3.8/library/venv.html)
-[](https://www.mongodb.com/resources/products/compatibilities/setting-up-flask-with-mongodb)
-[](https://wtforms.readthedocs.io/en/2.3.x/)
-[](https://getbootstrap.com/docs/4.0/)
+- [https://flask.palletsprojects.com/en/3.0.x/](https://flask.palletsprojects.com/en/3.0.x/)
+- [https://flask.palletsprojects.com/en/3.0.x/deploying/](https://flask.palletsprojects.com/en/3.0.x/deploying/)
+- [https://docs.python.org/es/3.8/library/venv.html](https://docs.python.org/es/3.8/library/venv.html)
+- [https://www.mongodb.com/resources/products/compatibilities/setting-up-flask-with-mongodb](https://www.mongodb.com/resources/products/compatibilities/setting-up-flask-with-mongodb)
+- [https://wtforms.readthedocs.io/en/2.3.x/](https://wtforms.readthedocs.io/en/2.3.x/)
+- [https://getbootstrap.com/docs/4.0/](https://getbootstrap.com/docs/4.0/)
