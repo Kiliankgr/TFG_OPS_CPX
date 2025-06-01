@@ -9,7 +9,7 @@
   </style>
 
 
-  <div class="col-md-8 ml-4">
+  <div class="col-md-12">
     <div>
       <form action="" method="POST">
           {{ form_add_instancia.csrf_token() }} <!---necesario si se añadio contraseña--->
@@ -50,7 +50,7 @@
     </div>
   </div>
         
-      <!-- Esta atento al mensaje flash para informar del estado, embellecerlo luego-->
+      <!-- Esta atento al mensaje flash para informar del estado-->
       {% for category, message in get_flashed_messages(with_categories=true) %}
         <script>
           // De esta manera mostramos el mensaje como una alerta, para javascript hay que transformar el mensaje a un json y luego asegurar la inserción html

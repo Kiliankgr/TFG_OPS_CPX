@@ -125,7 +125,8 @@
         <!-- Botones -->
         <div class="col-md-2">
           <ul class="list-group">
-              <a type="button" href="/add_instancias" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</a>
+              <!--<a type="button" href="/add_instancias" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</a>-->
+              <button type="button" onclick="window.location.href='/add_instancias'" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</button>
               <!--Ejecución del modelo-->
               <form id="probar_modelo_form" method="POST" action="">
                 <input type="hidden" name="id_instancia_a_probar" id="id_instancia_a_probar" value="">
@@ -176,7 +177,7 @@
           <!--Informacion del modelo-->
           
             <div class="card">
-              <div class="card-header h4 font-weight-bold">                
+              <div class="card-header h3 font-weight-bold">                
                 Información del Modelo
               </div>
               <div class="card-body">
@@ -339,7 +340,7 @@
 </script>
 
 
-<script>//REVISAR
+<script>
   document.getElementById('descargar_instancia_btn').addEventListener('click', function() {
     //obtenemos nombre y contenido de la instancia seleccionada
     nombre = document.getElementById('nombre_instancia').value
@@ -404,7 +405,7 @@
     var flashMessages = document.querySelectorAll('[id^="mensaje_flash_temporal_"]');
     
     flashMessages.forEach(function(flashMessage) {
-      // Oculta cada mensaje después de 2 segundos (2000 ms)
+      // Oculta cada mensaje después de x ms
       setTimeout(function() {
           flashMessage.classList.add('hidden');
       }, 6000);
@@ -412,7 +413,7 @@
       // Elimina cada mensaje del DOM después de la transición
       setTimeout(function() {
           flashMessage.parentNode.removeChild(flashMessage);
-      }, 6500); // 3000 ms + 500 ms para la transición
+      }, 6500); // x ms + 500 ms para la transición
     });
     //Buscamos notificación de finalización del modelo
     var messagefinalizacion = document.getElementById('mensaje_flash_temporal');
@@ -437,13 +438,13 @@
     window.modalCargaInstancia = modal;
 
     // Mostrar mensaje flash opcionalmente
-    const flashContainer = document.getElementById('flash_messages');
+    /*const flashContainer = document.getElementById('flash_messages');
     const flashMessage = document.createElement('div');
     flashMessage.className = 'alert alert-info';
     flashMessage.role = 'alert';
     flashMessage.id = 'mensaje_flash_ejecutandose';
     flashMessage.innerText = 'Se está ejecutando el modelo, puede tardar varios minutos, por favor sea paciente';
-    flashContainer.appendChild(flashMessage);
+    flashContainer.appendChild(flashMessage);*/
   });
 </script>
 

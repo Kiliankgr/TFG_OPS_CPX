@@ -1,12 +1,98 @@
 <!DOCTYPE html>
 <html>
+
+<style>
+  body.modo-oscuro {
+    background-color: #121212;
+    color: #f1f1f1;
+  }
+  .modo-oscuro .list-group-item {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+  }
+
+  .modo-oscuro .content-section {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+  }  
+
+  .modo-oscuro {
+    background-color: #1c1c1c;
+    color: #f1f1f1;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .modo-oscuro .form-control {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #444;
+  }
+
+  .modo-oscuro .form-control:focus {
+    background-color: #333;
+    color: #fff;
+    border-color: #007bff;
+  }
+
+  .modo-oscuro .form-control-plaintext {
+    color: #fff;
+  }
+
+  .modo-oscuro .article-title {
+    color: #d1d1d1;
+  }
+
+  /* Modelo */
+  .modo-oscuro .card {
+    background-color: #222;
+    color: #eee;
+  }
+  .modo-oscuro .modal-content {
+    background-color: #222;
+    color: #eee;
+  }
+
+  .modo-oscuro #contenido_modelo {
+    background-color: #2a2a2a;
+    color: #eee;
+    border: 1px solid #444;
+  }
+
+  
+
+  /* Asegura contraste para links */
+  .modo-oscuro a {
+    color: #9ecbff;
+  }
+
+  /*Barra de navegación*/
+  .modo-oscuro .navbar-collapse .nav-link {
+    color: #444 !important;
+  }
+
+  .modo-oscuro .site-header .navbar-nav .nav-link:hover {
+    color: #222 !important;
+  }
+
+  .modo-oscuro .navbar-dark .navbar-brand {
+    color: #333;
+  }
+  .modo-oscuro .navbar-dark .navbar-brand:hover {
+    color: #111;
+  }
+</style>
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+
+    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
@@ -22,7 +108,7 @@
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
           <a class="navbar-brand mr-4" href="/">OPS_CPX</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">qdqwq
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
@@ -32,6 +118,7 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
+              <button class="btn btn-outline-dark" id="modo_oscuro_btn" >Modo Oscuro 🌙</button>
               <a class="nav-item nav-link" href="/about">About</a>
             </div>
           </div>
@@ -47,9 +134,30 @@
       </div>
     </main>
     
+    <script>
+      const boton_modo = document.getElementById('modo_oscuro_btn');
 
+      document.getElementById('modo_oscuro_btn').addEventListener('click', function () {
+        const modo_oscuro_activado = document.body.classList.toggle('modo-oscuro');
+    
+        boton_modo.textContent = modo_oscuro_activado ? "Modo Claro ☀️" : "Modo Oscuro 🌙";
+        boton_modo.className = modo_oscuro_activado ? "btn btn-outline-dark" : "btn btn-outline-light";
+        localStorage.setItem('modo_oscuro_activado', modo_oscuro_activado);
+      });
+    
+      // Activar automáticamente si ya estaba activado anteriormente
+      window.addEventListener('DOMContentLoaded', () => {
+        const estaba_activado = localStorage.getItem('modo_oscuro_activado') === 'true';
+        if (estaba_activado) {
+          document.body.classList.add('modo-oscuro');
+        } 
+
+        boton_modo.textContent = estaba_activado ? "Modo Claro ☀️" : "Modo Oscuro 🌙";
+        boton_modo.className = estaba_activado ?  "btn btn-outline-dark" : "btn btn-outline-light";
+      });
+    </script>
     <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- jQuery, Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

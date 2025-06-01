@@ -348,11 +348,11 @@ def eliminar_instancia(id):
             print(f"No se encontró ninguna instancia con id: {id}")
     except Exception as e:
         print(f"Error al eliminar la instancia: {e}")
-    return redirect("/mostrar_instancias")
+    return redirect("/")
 
 # Eliminación de modelos a partir de instancia
 @app.route("/eliminar_modelo/<id>")
 def eliminar_modelo(id):
     print("Eliminar modelo de la intancia con id:" + str(id))            
     eliminar_modelo_si_existe(id)
-    return redirect("/mostrar_instancias")
+    return redirect("/")
