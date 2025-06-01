@@ -79,13 +79,13 @@
           <ul class="list-group" style="width:100%">
             {% for instancia in instancias %}
               <!--Transformamos el diccionario de la instancia a JSON, <ignorar aviso de error>-->
-              <article class="btn btn-info active mb-2" id="instancia_elemento" onclick='seleccionarInstancia({{ instancia | tojson | safe }})'>
+              <article class="btn btn-info mb-2 instancia_elemento"  onclick='seleccionarInstancia({{ instancia | tojson | safe }})'>
                 <input type="radio" name="options" autocomplete="off">
                 <div class="media-body">
                   <!--<div class="article-metadata d-flex justify-content-between">-->
                   <div class="article-metadata">
-                    <small class="text-light">{{ instancia.fecha.split("_")[0] }}</small>
-                    <small class="text-light">{{ instancia.fecha.split("_")[1] }}</small>
+                    <small class="text-light">{{ instancia.fecha_texto.split("_")[0] }}</small>
+                    <small class="text-light">{{ instancia.fecha_texto.split("_")[1] }}</small>
                   </div>
                   <h4><a class="article-title" id = "a_nombre_instancia">{{ instancia.nombre }}</a></h4>
                 </div>
@@ -258,7 +258,8 @@
 <script type="text/javascript">
   var instancias_existentes = {{ instancias|tojson}}
   var logs = {{ logs|tojson }};
-  var modelo_seleccionado_actualmente;
+  var instancia_seleccionado_actualmente_elemento;
+  
 </script>
 
 <!-- Pasar la variable 'instancias' al cliente como JSON -->
@@ -293,7 +294,7 @@
       //logElemento.style.display = 'block';
       document.getElementById("nombre_modelo").textContent = modelo_seleccionado_actualmente.nombre;
       
-      document.getElementById("fecha_modelo").textContent = modelo_seleccionado_actualmente.fecha;
+      document.getElementById("fecha_modelo").textContent = modelo_seleccionado_actualmente.fecha_texto;
 
       document.getElementById("beneficio_modelo").textContent = modelo_seleccionado_actualmente.valor_beneficio;
 
@@ -437,42 +438,46 @@
     // Guardar referencia para poder cerrarlo después si es necesario
     window.modalCargaInstancia = modal;
 
-    // Mostrar mensaje flash opcionalmente
-    /*const flashContainer = document.getElementById('flash_messages');
-    const flashMessage = document.createElement('div');
-    flashMessage.className = 'alert alert-info';
-    flashMessage.role = 'alert';
-    flashMessage.id = 'mensaje_flash_ejecutandose';
-    flashMessage.innerText = 'Se está ejecutando el modelo, puede tardar varios minutos, por favor sea paciente';
-    flashContainer.appendChild(flashMessage);*/
   });
 </script>
 
 <!-- Encargado de hacer que se quede seleccionado la instancia seleccionada al recargar la página al ejecutar el modelo-->
 
 <script>
-  // Protegemos el bloque para evitar errores si es None
+  document.addEventListener("DOMContentLoaded", function () {
   let ins_seleccionada_al_cargar = {{ instancia_anteriormente_seleccionada | tojson | default('null', true) }};
-  
+
   if (ins_seleccionada_al_cargar) {
-    console.log("Instancia previamente seleccionada:", ins_seleccionada_al_cargar);
+    console.log("Instancia previamente seleccionada:", ins_seleccionada_al_cargar._id);
     seleccionarInstancia(ins_seleccionada_al_cargar);
-    /* EN Proceso para que se quede seleccionado visualmente
-    const articulos = document.querySelectorAll("#columna_instancias article");
 
-    // Ahora buscamos el artículo correspondiente a la instancia seleccionada
-    const coincidencia = Array.from(articulos).find(art => {
-      // Buscar por nombre o id según cómo decidamos, probablemente por id, cambiar
-      const nombreElemento = art.querySelector(".article-title");
-      return nombreElemento?.textContent?.trim() === instancia.nombre;
-    });
+    let articulos = document.querySelectorAll('.instancia_elemento');
+    let instancia_seleccionado_actualmente_elemento = null;
 
-    if (coincidencia) {
-      coincidencia.classList.add("active");
-      coincidencia.classList.remove("btn-secondary");
-      coincidencia.classList.add("btn-info");
-    }*/
+    for (let articulo of articulos) {
+      let onclickAttr = articulo.getAttribute('onclick');
+      const match = onclickAttr.match(/"_id"\s*:\s*"([^"]+)"/);
+
+      if (match) {
+        const id = match[1];
+        if (id === ins_seleccionada_al_cargar._id) {
+          instancia_seleccionado_actualmente_elemento = articulo;
+          break;
+        }
+      }
+    }
+
+    if (instancia_seleccionado_actualmente_elemento) {
+      // Primero eliminamos la clase 'active' de todos
+      articulos.forEach(el => el.classList.remove('active'));
+
+      // Luego la agregamos al seleccionado
+      instancia_seleccionado_actualmente_elemento.classList.add('active');
+      console.log("Se encontro instancia:");
+      console.log(instancia_seleccionado_actualmente_elemento);
+    }
   }
+  });
 </script>
 
 
@@ -533,62 +538,8 @@
     instancia_de_grafica = new Chart(document.getElementById('miGrafica'), config);
   });
 </script>
-<!--Primera prueba reordenamiento-->
-<!--
-<script>
-  function ordenarPor(criterio) {
-    /*if(criterio === "fecha") {
-      instancias_existentes = instancias_existentes.sort((a, b) => {
-        return a.nombre.localeCompare(b.nombre);
-      });
-      
-      
-    } 
-    if(criterio === "nombre") {
 
-      instancias_existentes = instancias_existentes.sort((a, b) => {
-        return a.nombre.localeCompare(b.nombre);
-      });
-      
-      
-    }*/
-    // Seleccionamos el contenedor donde están las instancias
-    const columna = document.getElementById("columna_instancias");
-
-    // Limpiamos el contenido anterior
-    columna.innerHTML = `
-      <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
-        <ul class="list-group" style="width:100%" id="lista_instancias">
-        </ul>
-      </div>
-    `;
-
-    const lista = document.getElementById("lista_instancias");
-
-    // Recorremos las instancias ordenadas e inyectamos el HTML
-    instancias_existentes.forEach(instancia => {
-      const [fecha, hora] = instancia.fecha.split("_");
-
-      const articleHTML = `
-        <article class="btn btn-info active mb-2" onclick='seleccionarInstancia(${JSON.stringify(instancia)})'>
-          <input type="radio" name="options" autocomplete="off">
-          <div class="media-body">
-            <div class="article-metadata d-flex justify-content-between">
-              <small class="text-light">${fecha}</small>
-              <small class="text-light">${hora}</small>
-            </div>
-            <h4><a class="article-title">${instancia.nombre}</a></h4>
-          </div>
-        </article>
-      `;
-
-      lista.insertAdjacentHTML("beforeend", articleHTML);
-    });
-  }
-  //NOTA:: PROBABLEMENTe deberíamos de mandar a deshabilitar los botones como al recargar la pagina, asi como el contenido
-</script>
--->
-<!--Segunda Prueba reordenamiento en lugar decambiar el contenido aquí mismo recargamos la página con el contenido nuevo-->
+<!--Reordenamiento en lugar decambiar el contenido aquí mismo recargamos la página con el contenido nuevo-->
 <script>
     function ordenarPor(criterio_orden) {
       // Redirige a la ruta con el parámetro ?criterio=nombre o ?criterio=fecha, (argumentos extras que son recibidos y revisados por el back)

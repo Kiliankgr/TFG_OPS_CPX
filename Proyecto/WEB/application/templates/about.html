@@ -2,11 +2,55 @@
 {% block content %}
 
 
-<div class="col-sm-12 ">
-  <div class="container ">
-      <embed src="/static/Memoria_TFG_Kilian_Gonzalez_Rodriguez_Firmada.pdf" type="application/pdf" width="100%" height="1000px"/>
+<div class="col-md-12">
+  <h1>Manual de Usuario</h1>
+  <p>Bienvenido al sistema. Este manual tiene como objetivo guiarte en el uso de las funcionalidades principales de la plataforma.</p>
+
+  <div class="section" id="barra-navegacion">
+    <h2>1. Barra de Navegación</h2>
+    <p>La barra superior de navegación contiene accesos a las distintas secciones del sistema:</p>
+    <ul>
+      <li><strong>OPS_CPX:</strong> Vista principal de gestión de instancias.</li>
+      <li><strong>Crear Instancia:</strong> Formulario para añadir nuevas instancias.</li>
+      <li><strong>Manual:</strong> Acceso a esta guía.</li>
+    </ul>
+    <p>Además, puedes alternar entre el <strong>modo claro y oscuro</strong> para personalizar el tema visual de la interfaz.</p>
+    <img src="/static/img/barra_navegacion.png" alt="Barra de navegación">
+  </div>
+
+  <div class="section" id="ops-cpx">
+    <h2>2. Pestaña OPS_CPX</h2>
+    <p>En esta sección puedes visualizar y administrar todas las <strong>instancias existentes</strong>.</p>
+    <p>Las funcionalidades principales incluyen:</p>
+    <ul>
+      <li><strong>Visualizar detalles</strong> de cada instancia, como nombre, fecha y contenido.</li>
+      <li><strong>Modificar contenido</strong> manualmente.</li>
+      <li><strong>Eliminar instancias</strong> que ya no sean necesarias.</li>
+      <li><strong>Ejecutar una instancia</strong> para procesarla.</li>
+      <li><strong>Ver si hay un modelo asociado</strong> y revisar su información.</li>
+      <li><strong>Descargar el contenido</strong> de la instancia en un archivo.</li>
+    </ul>
+    <img src="/static/img/ops_cpx_ejemplo.png" alt="Pantalla OPS_CPX">
+  </div>
+
+  <div class="section" id="crear-instancia">
+    <h2>3. Pestaña Crear Instancia</h2>
+    <p>Desde esta sección puedes crear una nueva instancia de dos formas:</p>
+    <ol>
+      <li><strong>Manual:</strong> Rellenando los campos con el nombre y contenido de la instancia directamente desde el formulario.</li>
+      <li><strong>Automática:</strong> Subiendo un archivo con los datos necesarios (JSON, CSV, etc.).</li>
+    </ol>
+    <p>Una vez creada, la instancia aparecerá en la pestaña OPS_CPX y estará disponible para interactuar con ella.</p>
+    <img src="/static/img/formulario_instancia.png" alt="Formulario para crear instancia">
+  </div>
+
+  <div class="section">
+    <h2>Contacto y Soporte</h2>
+    <p>Si tienes dudas adicionales o detectas algún error, contacta con el equipo de desarrollo o revisa la sección de preguntas frecuentes.</p>
   </div>
 </div>
+  <!--<embed src="/static/Memoria_TFG_Kilian_Gonzalez_Rodriguez_Firmada.pdf" type="application/pdf" width="100%" height="1000px"/>-->
+
 
    
 {% endblock content %}

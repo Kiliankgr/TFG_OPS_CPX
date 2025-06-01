@@ -25,11 +25,7 @@ def about():
 
 # Por ahora mostrará los instancias y permitirá modificar su contenido o añadir nuevos 
 @app.route("/", methods=["GET", "POST", "DELETE"])
-def mostrar_instancias():
-    estado_de_la_ultima_ejecucion_modelo = True #estará atento a la ultima ejecución del modelo
-    #instancias = db.Instancias.find().sort("nombre")
-    #instancias = [convert_objectid_to_str(instancia) for instancia in instancias]
-    
+def mostrar_instancias():    
     #Comprobamos si hemos recibido alguna solicitud especifica desde el front
     criterio_orden = request.args.get("criterio_orden", default="fecha")
     
@@ -53,9 +49,6 @@ def mostrar_instancias():
             instancia = convert_objectid_to_str(instancia)        
             instancias.append(instancia)
     logs = obtener_logs()
-
-    #print("Logs cotenido:")
-    #print(logs[0]["contenido"])
 
     #Forms
     form_mod_instancia = Mod_Instancia_Form()
@@ -155,16 +148,16 @@ def modificar_instancia(form_mod_instancia):
         #Pasamos a Json el contenido
     try:
         contenido_json = json.loads(mod_instancia_contenido)
-        fecha_actual = time.strftime('%d-%m-%Y_%H:%M:%S')    
-        #instancia = db.Instancias.find({"_id": identificador})
-
-        
+        fecha_actual_texto = time.strftime('%d-%m-%Y_%H:%M:%S')    
+        fecha_actual = datetime.strptime(fecha_actual_texto, '%d-%m-%Y_%H:%M:%S')        
         #pymongo flask, modificamos en la coleccion Instancias
-        #ya que se modifica el contenido la fecha y el nombre se actualizarán
+        #ya que se modifica el contenido la fecha y el nombre se actualizarán  
         
         db.Instancias.find_one_and_update({"_id": ObjectId(identificador)}, {"$set": {
             "contenido": contenido_json,
+            "fecha_texto" : fecha_actual_texto, 
             "fecha" : fecha_actual,
+
         }})
         
         #Mensaje al usuario
@@ -193,14 +186,17 @@ def add_instancias():
         form_add_instancia = Add_Instancia_Form(request.form)
         add_instancia_nombre = form_add_instancia.nombre.data
         add_instancia_contenido = form_add_instancia.contenido.data
+        
         #Pasamos a Json el contenido
         try:
             contenido_json = json.loads(add_instancia_contenido)
-            #fecha_actual = time.strftime('%Y-%m-%d_%H:%M:%S')   
-            fecha_actual = time.strftime('%d-%m-%Y_%H:%M:%S')   
+            
+            fecha_actual_texto = time.strftime('%d-%m-%Y_%H:%M:%S')   
+            fecha_actual = datetime.strptime(fecha_actual_texto, '%d-%m-%Y_%H:%M:%S')
             #pymongo flask, insertamos en la coleccion Instancias
             db.Instancias.insert_one({
-                "nombre" : add_instancia_nombre, 
+                "nombre" : add_instancia_nombre,
+                "fecha_texto" : fecha_actual_texto, 
                 "fecha" : fecha_actual,
                 "contenido" : contenido_json
             })            
@@ -289,7 +285,7 @@ def guardar_resultados_modelo(instancia_id, ruta_fichero_contenido, ruta_fichero
             resumen_contenido = file.read().splitlines()
         
         
-        nombre_modelo = instancia_usada.get("nombre") + "_" + str(instancia_usada.get("fecha"))
+        nombre_modelo = instancia_usada.get("nombre") + "_" + str(instancia_usada.get("fecha_texto"))
         
         
         
