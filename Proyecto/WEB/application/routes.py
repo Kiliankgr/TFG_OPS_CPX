@@ -1,5 +1,5 @@
 from application import app, db
-from flask import render_template,flash, request, redirect
+from flask import render_template,flash, request, redirect, url_for
 from .forms import Add_Instancia_Form, Mod_Instancia_Form, Instancia_Modelo_Form
 from datetime import datetime
 import time
@@ -28,7 +28,7 @@ def about():
 def mostrar_instancias():    
     #Comprobamos si hemos recibido alguna solicitud especifica desde el front
     criterio_orden = request.args.get("criterio_orden", default="fecha")
-    
+    instancia_anteriormente_seleccionada_id = request.args.get("instacia_previa_seleccionada_id", default=None)
     instancia_anteriormente_seleccionada = None
     instancias = []
     print("Criterio routes: " + criterio_orden)
@@ -49,7 +49,12 @@ def mostrar_instancias():
             instancia = convert_objectid_to_str(instancia)        
             instancias.append(instancia)
     logs = obtener_logs()
-
+    if (instancia_anteriormente_seleccionada_id):
+        for i in instancias:
+            if i["_id"] == instancia_anteriormente_seleccionada_id:
+                instancia_anteriormente_seleccionada = i
+                break
+        
     #Forms
     form_mod_instancia = Mod_Instancia_Form()
     form_instancia_modelo = Instancia_Modelo_Form()
@@ -93,9 +98,9 @@ def mostrar_instancias():
             #Para ello deberemos por ahora de crear una serie de ficheros temporales para pasarles el contenido al modelo                    
             return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs, instancia_anteriormente_seleccionada = instancia_anteriormente_seleccionada)
         
-        print("Vamos a modificar una instancia")        
+          
         form_mod_instancia = Mod_Instancia_Form(request.form)
-        #necesitamos el id por ahora se me ocurre que se añada al form y que esté en oculto
+        
         instancia_anteriormente_seleccionada_id = modificar_instancia(form_mod_instancia)
         
         #volvemos a obtener las instancias, ya que la informacion a cambiado, tal vez a futuro solo mod
@@ -120,8 +125,9 @@ def mostrar_instancias():
                 if(instancia["_id"] == instancia_anteriormente_seleccionada_id):
                     instancia_anteriormente_seleccionada = instancia
         logs = obtener_logs()          
-
+    
     #instance_id = request.form.get('id_instancia_a_eliminar')
+    #print("Bueno veamos si esto se cambia bien" + instancia_anteriormente_seleccionada["nombre"])
     return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs, instancia_anteriormente_seleccionada=instancia_anteriormente_seleccionada)
 
 def obtener_logs():
@@ -345,10 +351,11 @@ def eliminar_instancia(id):
     except Exception as e:
         print(f"Error al eliminar la instancia: {e}")
     return redirect("/")
+    
 
 # Eliminación de modelos a partir de instancia
 @app.route("/eliminar_modelo/<id>")
 def eliminar_modelo(id):
     print("Eliminar modelo de la intancia con id:" + str(id))            
     eliminar_modelo_si_existe(id)
-    return redirect("/")
+    return redirect(url_for("mostrar_instancias", criterio_orden="fecha", instacia_previa_seleccionada_id=id))

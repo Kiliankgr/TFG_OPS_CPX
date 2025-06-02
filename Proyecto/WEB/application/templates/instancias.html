@@ -48,6 +48,15 @@
     overflow-wrap: break-word;   /* Compatibilidad adicional */
   }
 
+  #grafico_modal_label {
+    
+    max-width: 100%;
+    word-wrap: break-word;        /* Fuerza el salto en palabras largas */
+    overflow-wrap: break-word;   /* Compatibilidad adicional */
+  }
+
+ 
+
 
   #a_nombre_instancia {
     display: inline-block;
@@ -225,11 +234,11 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="grafico_modal" tabindex="-1" aria-labelledby="graficoModalLabel" aria-hidden="true">
+<div class="modal fade" id="grafico_modal" tabindex="-1" aria-labelledby="grafico_modal_label" style="padding: 5px;" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="graficoModalLabel">Gráfica de Ejemplo</h5>
+        <h5 class="modal-title" id="grafico_modal_label">Gráfica de Ejemplo</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
@@ -487,7 +496,7 @@
   var modal = document.getElementById('grafico_modal');
   modal.addEventListener('shown.bs.modal', function () {
     // Actualizamos el título
-    document.getElementById("graficoModalLabel").textContent = "Probando: " + modelo_seleccionado_actualmente.nombre;
+    document.getElementById("grafico_modal_label").textContent = modelo_seleccionado_actualmente.nombre;
 
     // Obtenemos los datos
     var objetos_seleccionados = modelo_seleccionado_actualmente["objetos_seleccionados"];
