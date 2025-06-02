@@ -18,13 +18,13 @@
       <li><strong>Manual:</strong> Acceso a esta guía.</li>
     </ol>
   </div>
-  <div class="row">
+  
     <div class="section" id="ops-cpx">
       <h2>2. Pestaña OPS_CPX</h2>
       <p>En esta sección puedes visualizar y administrar todas las <strong>instancias existentes</strong>.</p>
       <div class="row">
         <div class="col-md-6">
-          <img src="../static/img/OPS_CPX.png" width="100%">  
+          <img src="../static/img/OPS_CPX_Enumerado.png" width="100%">       
         </div>
         <div class="col-md-6">
           <p>Las funcionalidades principales incluyen:</p>
@@ -33,34 +33,58 @@
             <li><strong>Ordenar Instancias</strong> por fecha de creación o por nombre</li>
             <li><strong>Visualizar detalles</strong> de cada instancia,nombre y contenido.</li>
             <li><strong>Modificar contenido</strong> de la Instancia en cuestión.</li>
-            <li><strong>Nueva instancia</strong>, permite ir a la pestaña de creación de instancias</li>
-            <li><strong>Ejecutar una instancia</strong> para procesarla.</li>
-            <li><strong>Eliminar instancias</strong> que ya no sean necesarias.</li>
-            <li><strong>Ver si hay un modelo asociado</strong> y revisar su información.</li>
+            <li><strong>Nueva instancia</strong>, permite ir a la pestaña de creación de instancias.</li>
+            <li><strong>Ejecutar una instancia</strong> para procesar el resultado mediante el modelo.</li>
             <li><strong>Descargar el contenido</strong> de la instancia en un archivo.</li>
+            <li><strong>Eliminar instancias</strong> que ya no sean necesarias.</li>
+            <li><strong>Modelo asociado</strong> a la Instancia si existe.</li>
+            <li><strong>Descargar el contenido</strong> del modelo en un archivo.</li>
+            <li><strong>Eliminar instancias</strong> que ya no sean necesarias.</li>
+            <li><strong>Generar gráfica</strong> con el resultado del modelo.</li>
           </ol>
         </div>
       </div>
+      <h4 class="mt-2">2.1 Visualización y obtención de datos</h4>
+      <p>
+      Aquí podremos trabajar con las Instancias creadas como ya explicamos antes. Si se desea poner a prueba una instancia solo se tendrá que seleccionar la instancia deseada y pulsar en el botón de "ejecutar", este llamará al modelo y devolverá los datos.
+      
+      Mientras se ejecuta el modelo la aplicación quedará bloqueada para evitar complicaciones.
+      </p>
+      <img src="../static/img/Modal de carga.png" class="mx-auto d-block" width="50%">      
+      <p>Una vez finalizada la ejecución se notificará al usuario y se podrá observar la información resultante de la instancia seleccionada en la zona inferior de la pantalla, así bien también se podrá generar una gráfica con los resultados</p>
+      <div class="row">
+        <div class="col-md-6">
+          <img src="../static/img/Alertas.png" width="100%">      
+        </div>
+        <div class="col-md-6">
+          <img src="../static/img/OPS_CPX_Grafica.png" width="100%">  
+        </div>
+      </div>
     </div>
-  </div>
+  
 
   <div class="section" id="crear-instancia">
-    <h2>3. Pestaña Crear Instancia</h2>
+    <h2 class="mt-2">3. Pestaña Crear Instancia</h2>
     <p>Desde esta sección puedes crear una nueva instancia de dos formas:</p>
     <ol>
       <li><strong>Manual:</strong> Rellenando los campos con el nombre y contenido de la instancia directamente desde el formulario.</li>
-      <li><strong>Automática:</strong> Subiendo un archivo con los datos necesarios (JSON, CSV, etc.).</li>
+      <li><strong>Automática:</strong> Subiendo un archivo con los datos necesarios el contenido del fichero debe de estar en formato JSON</li>
     </ol>
-    <p>Una vez creada, la instancia aparecerá en la pestaña OPS_CPX y estará disponible para interactuar con ella.</p>
-    <img src="/static/img/formulario_instancia.png" alt="Formulario para crear instancia">
+    <p>Una vez insertados los datos, solo será necesario confirmar, la instancia aparecerá en la pestaña OPS_CPX y estará disponible para interactuar con ella.</p>
+    <div class="row">
+      <div class="col-md-6">
+        <img src="../static/img/Añadir_instancia_vacio.png" alt="Formulario para crear instancia" width="100%">
+      </div>
+      <div class="col-md-6">
+        <img src="../static/img/Añadir_instancia.png" alt="Formulario para crear instancia" width="100%">
+      </div>
+    </div>
+    
   </div>
 
-  <div class="section">
-    <h2>Contacto y Soporte</h2>
-    <p>Si tienes dudas adicionales o detectas algún error, contacta con el equipo de desarrollo o revisa la sección de preguntas frecuentes.</p>
-  </div>
+
 </div>
-  <!--<embed src="/static/Memoria_TFG_Kilian_Gonzalez_Rodriguez_Firmada.pdf" type="application/pdf" width="100%" height="1000px"/>-->
+
 
 
    

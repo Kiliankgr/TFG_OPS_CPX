@@ -60,12 +60,12 @@ def mostrar_instancias():
         print("request value :")
         print(request.form.get("id_instancia_a_probar"))        
         #Diferenciamos las diferentes solicitudes post
-        if "probar_btn" in request.form :
-            print("Se detectó el btn probar:")
+        if "ejecutar_btn" in request.form :
+            
             #Ejecutamos el modelo
             #ins = db.Instancias.find({"_id": ObjectId(request.form.get("id_instancia_a_probar"))}).next()
             #print(ins["contenido"])
-            id_instancia_seleccionada = request.form.get("id_instancia_a_probar")
+            id_instancia_seleccionada = request.form.get("id_instancia_a_ejecutar")
             
             for instancia in instancias:
                 
