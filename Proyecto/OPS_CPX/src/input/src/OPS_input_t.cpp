@@ -124,8 +124,9 @@ namespace EMIR
 
 void OPS_input_t::resize_structures(void)
 {
-    const int m = get_m();
-    const int n = get_n();
+    //Modificamos el tamaño de la estructura según la instancia
+    const int m = get_m(); //Jk Matriz de Varillas con los objetos a observar
+    const int n = get_n(); //b Beneficio(peso) de cada objeto
 	
 	//cout << "CREANDO ESTRUCTURAS: " << m << " " << n << endl;
     
@@ -214,6 +215,7 @@ void OPS_input_t::get_L(vector<int>& L) const
     L[n - 1] = get_L();
 }
 
+//Creamos la estructura en función de los elementos que se encuentran en cada varilla
 void OPS_input_t::make_structures(void) // AQUÍ!!!!!!!!!
 {
     int l = 0;
@@ -234,9 +236,9 @@ void OPS_input_t::make_structures(void) // AQUÍ!!!!!!!!!
         vector<int>& arcs_k = arcs_k_[k];
 
         vector<int> nodes(n, 0);
-
+        // actualizamos la estructura según las matrices de coste tranformadas (Si  no me equivoco T_cost(i,j) da el coste de desplazmiento de i a j)
         for(auto j: Jk) {
-			if (t_cost_(1, j + 1) < INF_SP)
+			if (t_cost_(1, j + 1) < INF_SP) //INF_SP es un cap, 
 				update_structures(k, 0, j, l, A_inv, arcs_k,  nodes);			
 		}
 
@@ -267,7 +269,7 @@ void OPS_input_t::make_structures(void) // AQUÍ!!!!!!!!!
 
     }
 }
-
+//no estoy seguro
 void OPS_input_t::make_prev(void)
 {
     const int m = get_m();
@@ -305,13 +307,13 @@ void OPS_input_t::make_prev(void)
 void OPS_input_t::build_input(void)
 {
 
-    resize_structures();
+    resize_structures(); 
 
-    make_structures();
+    make_structures(); 
 
     make_prev();
 
-    init_t_cost();
+    init_t_cost();//Matriz de costes iniciales (Creo)
 
 #ifndef NDEBUG
     test_succ();
@@ -330,8 +332,10 @@ void OPS_input_t::write_arc_inx(ostream& os, int inx) const
     os << "(" << setw(3) << s << ", " << setw(3) << t << ")[" << setw(2) << k << " ]";    
 }
 
-OPS_input_t::OPS_input_t(const OPS_instance_t& instance, bool build):
-    instance_(instance),
+OPS_input_t::OPS_input_t(const OPS_instance_t& instance, bool build): //Build = true por defecto
+    //Inicialicación por defecto
+    instance_(instance),//Se supone que el constructor está vacío, pero le estamos pasando una instancia ya creada previamente
+    //Vectores
     succ_(),
     pred_(),
     succ_inx_(),
@@ -348,11 +352,11 @@ int OPS_input_t::get_max_arc(void) const
 {
     int max = 0;
 
-	const int sz = get_A_succ_sz();
+	const int sz = get_A_succ_sz(); //Tamaño del vector
 
 	for(int l = 0; l < sz; l++){
   
-		const int pos = get_A_succ(l);
+		const int pos = get_A_succ(l); //elemento
   
 		int i, j, k;          
 		get_pos(pos, k, i, j);   
@@ -804,7 +808,7 @@ void OPS_input_t::write_statistics_hdr(ostream& os) const
 void OPS_input_t::write_statistics(ostream& os) const
 {
     instance_.write_statistics(os);
-
+    
     int nsync, maxgsync, mingsync;
     double avggsync;
 

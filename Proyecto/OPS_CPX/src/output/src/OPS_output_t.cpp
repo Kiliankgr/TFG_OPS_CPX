@@ -524,7 +524,7 @@ OPS_output_t::get_obj(void) const
     for(int j = y_.size() - 1; j >= 0; j--)
 	if(y_[j] > 0)
 	    {
-
+		
 		const double b = I_.OPS_input_t::get_b(j);
 		obj += y_[j] * b;
 	    }

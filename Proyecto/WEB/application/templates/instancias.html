@@ -8,51 +8,118 @@
 
   /* Estilos para el contenedor con desplazamiento */
   #columna_instancias {
-      max-height: 500px; /* Ajusta esta altura según sea necesario */
+      
+      height: 100%;
+      overflow: scroll; /* oculta desborde general */
+      max-height: 615px;
       overflow-y: auto;
+  }
+  #columna_instancias .scrollable-content {
+    overflow-y: scroll;
+    height: 100%; 
   }
 
   #columna_contenido_instancias {
     overflow-y: auto;
   }
+  #content-section_intancias{
+    
+    min-height: 400px;
+  }
+  #contenido_instancia{
+    height: max-content;
+    min-height: 400px;
+  }
+  #form_group_contenido{
+    height: max-content;
+  }
+  
+  #div_contenido_del_modelo p {
+    
+    max-width: 100%;
+    word-wrap: break-word;        /* Fuerza el salto en palabras largas */
+    overflow-wrap: break-word;   /* Compatibilidad adicional */
+  }
+
+  #div_contenido_del_modelo #nombre_modelo {
+    
+    max-width: 100%;
+    word-wrap: break-word;        /* Fuerza el salto en palabras largas */
+    overflow-wrap: break-word;   /* Compatibilidad adicional */
+  }
+
+  #grafico_modal_label {
+    
+    max-width: 100%;
+    word-wrap: break-word;        /* Fuerza el salto en palabras largas */
+    overflow-wrap: break-word;   /* Compatibilidad adicional */
+  }
+
+ 
+
+
+  #a_nombre_instancia {
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
 </style>
 
 <div class="container mt-5">
-    <h2 class="mb-4">Instancias</h2>
-    <div class="row">
-        <div class="col-md-4" id="columna_instancias">
-          <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
-            <ul class="list-group" style="width:100%">
-              {% for instancia in instancias %}
-                <!--Transformamos el diccionario de la instancia a JSON, <ignorar aviso de error>-->
-                <article class="btn btn-info active mb-2" id="instancia_elemento" onclick='seleccionarInstancia({{ instancia | tojson | safe }})'>
-                  <input type="radio" name="options" autocomplete="off">
-                  <div class="media-body">
-                    <div class="article-metadata">                              
-                      <small class="text-light">{{ instancia.fecha }}</small>
-                    </div>
-                    <h2><a class="article-title">{{ instancia.nombre }}</a></h2>
+    <h2 class="mb-4 mt-4">Instancias</h2>
+    
+      <div class="dropdown mb-3">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="ordenarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          Ordenar por
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="ordenarDropdown">
+          <li><a class="dropdown-item" href="#" onclick="ordenarPor('fecha')">Fecha</a></li>
+          <li><a class="dropdown-item" href="#" onclick="ordenarPor('nombre')">Nombre</a></li>
+        </ul>
+      </div>
+      <div class="row">
+      
+      <div class="col-md-4" id="columna_instancias">
+        
+        <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width:100%">
+          <ul class="list-group" style="width:100%">
+            {% for instancia in instancias %}
+              <!--Transformamos el diccionario de la instancia a JSON, <ignorar aviso de error>-->
+              <article class="btn btn-info mb-2 instancia_elemento"  onclick='seleccionarInstancia({{ instancia | tojson | safe }})'>
+                <input type="radio" name="options" autocomplete="off">
+                <div class="media-body">
+                  <!--<div class="article-metadata d-flex justify-content-between">-->
+                  <div class="article-metadata">
+                    <small class="text-light">{{ instancia.fecha_texto.split("_")[0] }}</small>
+                    <small class="text-light">{{ instancia.fecha_texto.split("_")[1] }}</small>
                   </div>
-                </article>
-              {% endfor %}
-            </ul>
-          </div>
+                  <h4><a class="article-title" id = "a_nombre_instancia">{{ instancia.nombre }}</a></h4>
+                </div>
+              </article>
+            {% endfor %}
+          </ul>
         </div>
+        
+      </div>
+        
         <!-- Sección de Contenido de la Instancia -->
-        <div class="col-md-6" id="columna_contenido_instancias">
+        <div class="col-md-6"  id="columna_contenido_instancias">
             <div class="content-section" id = "content-section_intancias" >
                 <!--<h3 id="nombre_instancia">Nombre</h3>-->
                 
                 <form action="" method="POST">
                   {{ form_mod_instancia.csrf_token() }}
-                  <fieldset class="form-group">
+                  <fieldset class="form-group" style="height: 100%;">
                     <div class="form-group">
                       <input type="text" readonly class="form-control-plaintext" id="nombre_instancia" style="font-size: 1.75rem; font-weight: bold;" value="<Nombre>">
                     </div>
 
-                    <div class="form-group" style="height:100%;">
+                    <div class="form-group"  id = "form_group_contenido">
                       {{ form_mod_instancia.contenido.label(class="formcontrol-label") }}
-                      {{ form_mod_instancia.contenido(id="contenido_instancia", style="height:80%", class="form-control") }}
+                      {{ form_mod_instancia.contenido(id="contenido_instancia", style="height:80%; resize: none;", class="form-control") }}
                     </div>
                     <div class="form-group">
                       {{ form_mod_instancia.modificar_btn(class="btn btn-outline-info") }}
@@ -67,11 +134,12 @@
         <!-- Botones -->
         <div class="col-md-2">
           <ul class="list-group">
-              <a type="button" href="/add_instancias" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</a>
+              <!--<a type="button" href="/add_instancias" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</a>-->
+              <button type="button" onclick="window.location.href='/add_instancias'" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</button>
               <!--Ejecución del modelo-->
-              <form id="probar_modelo_form" method="POST" action="">
-                <input type="hidden" name="id_instancia_a_probar" id="id_instancia_a_probar" value="">
-                <button type="submit" class="btn btn-primary mb-2" style="width:100%;" name="probar_btn" id="probar_btn" data-bs-toggle="tooltip" title="Probar la instancia con el modelo" disabled>Probar</button>
+              <form id="ejecutar_modelo_form" method="POST" action="">
+                <input type="hidden" name="id_instancia_a_ejecutar" id="id_instancia_a_ejecutar" value="">
+                <button type="submit" class="btn btn-primary mb-2" style="width:100%;" name="ejecutar_btn" id="ejecutar_btn" data-bs-toggle="tooltip" title="ejecutar la instancia con el modelo" disabled>Ejecutar</button>
               </form>
               <button type="button" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se descargará el resultado la instancia" name="descargar_instancia_btn" id="descargar_instancia_btn" disabled>Descargar</button>
               <!-- Eliminación de instancias-->
@@ -91,48 +159,44 @@
               {% endfor %}
           </ul>
         </div>
-    </div>
-    <!--Detector de alertas-->
-    <div class="row mt-1 ml-3">
-      {% for category, message in get_flashed_messages(with_categories=true) %}
-      <div class="row">
-        <!--<div class="alert alert-info" role = "alert" id="mensaje_flash">
-          {{ message }}
-        </div>-->
-
-        {% if category == 'warning'%}
-        <div class="alert alert-{{ 'warning' if category == 'warning' else 'info' }}" role="alert" id="mensaje_flash_ejecucion">
-          {{ message }}
-        </div>
-        {% endif %}
-        
-      </div>
-      {% endfor %}
-      <div id="flash_messages"></div> <!--Puesto por el front si ejecución-->
+    
     </div>
     <div class="row mt-2" >
       <!--Modelo-->
       <div class="col-md-10">
-        <div class="content-section">
+        <div class="content-section p-0" id="div_contenido_del_modelo">
           <!--Informacion del modelo-->
           
             <div class="card">
-              <div class="card-header h4 font-weight-bold">                
+              <div class="card-header h3 font-weight-bold">                
                 Información del Modelo
               </div>
               <div class="card-body">
                 <div class="row ml-1">    
-                  <h4 class="card-title font-weight-bold">Nombre Modelo: </h4> <p class="card-text"></p>
-                  <h4 class="card-title" id="nombre_modelo">a</h4>
+                  <h4 class="card-title font-weight-bold mr-1" >Nombre Modelo:</h4> 
+                  <h4 class="card-title" id="nombre_modelo"> </h4>
+                </div>
+                <hr style="width:100%;"> 
+                <div class="row ml-1">    
+                  <span class="card-text font-weight-bold mr-1" >Fecha de creación:</span>
+                  <p class="card-text" id="fecha_modelo"></p> <br>
                 </div>
                 <div class="row ml-1">    
-                  <p class="card-text font-weight-bold">Fecha de creación: <span id="fecha-creacion"></span></p>
-                  <p class="card-text" id="fecha_modelo">a</p>
+                  <span class="card-text font-weight-bold mr-1">Beneficio aportado:</span>
+                  <p class="card-text" id="beneficio_modelo"></p> <br>
                 </div>
                 <div class="row ml-1">    
-                  <p class="card-text font-weight-bold">Contenido:</p>
+                  <span class="card-text font-weight-bold mr-1">Objetos seleccionados: </span>
+                  <p class="card-text" id="objetos_seleccionados_modelo"></p> <br>
+                </div>
+                <div class="row ml-1">    
+                  <span class="card-text font-weight-bold mr-1">Instante de su seleccion:</span>
+                  <p class="card-text" id="momentos_seleccionados_modelo"></p> <br>
+                </div>
+                <div class="row ml-1">    
+                  <p class="card-text font-weight-bold mr-1 mb-1">Contenido:</p>
                 </div>          
-                <textarea class="form-control" id="contenido_modelo" rows="10" readonly></textarea>
+                <textarea class="form-control" id="contenido_modelo" rows="10" readonly style="font-family: monospace; resize: none" min-height = "300px"></textarea>
               </div>
             </div>
           
@@ -144,55 +208,108 @@
         <ul class="list-group">
             <button type="button" class="btn btn-primary mb-2" id="descargar_modelo_btn" data-bs-toggle="tooltip" title="Se descargará el resultado del modelo" disabled>Descargar</button>
             <button type="button" class="btn btn-danger mb-2" id="eliminar_modelo_btn" data-bs-toggle="tooltip" title="Se eliminará el resultado del modelo" disabled>Eliminar</button>
+            <button type="button" class="btn btn-danger mb-2" id="mostrar_grafica_modelo_btn"  data-bs-toggle="modal" data-bs-target="#grafico_modal"
+             title="Se mostrará una gráfica con los objetos seleccionados del modelo" disabled>Gráfica</button>
         </ul>
       </div>
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="grafico_modal" tabindex="-1" aria-labelledby="grafico_modal_label" style="padding: 5px;" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="grafico_modal_label">Gráfica de Ejemplo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <canvas id="miGrafica" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
 
 
+<!-- Modal de carga no cerrable (Propiedades dadas mediante js)-->
+<div class="modal fade" id="modalCarga" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-body">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-3">Se está ejecutando el modelo, puede tardar varios minutos, por favor sea paciente</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+  var instancias_existentes = {{ instancias|tojson}}
+  var logs = {{ logs|tojson }};
+  var instancia_seleccionado_actualmente_elemento;
+  
+</script>
 
 <!-- Pasar la variable 'instancias' al cliente como JSON -->
 <script type="text/javascript">
-  var logs = {{ logs|tojson }};
-
+  
+  
   function seleccionarInstancia(instancia) {
     
     // Actualizar el contenido del formulario
-    document.getElementById("id_instancia_a_probar").value = instancia._id; 
+    document.getElementById("id_instancia_a_ejecutar").value = instancia._id; 
     document.getElementById("identificador_seleccionado").value = instancia._id; 
     //document.getElementById("nombre_instancia").textContent = instancia.nombre; //Probablemente modifique la etiqueta de nombre y por ende esta linea de aquí
     document.getElementById("nombre_instancia").value = instancia.nombre;
     document.getElementById("contenido_instancia").value = JSON.stringify(instancia.contenido, null, 2); 
-    // modificamos el valor en caso de querer probar la instancia
+    // modificamos el valor en caso de querer ejecutar la instancia
     //Activamos la opción de que se pueda eliminar la instancia
-    document.getElementById("probar_btn").disabled = false;
+    document.getElementById("ejecutar_btn").disabled = false;
     document.getElementById("eliminar_instancia_btn").disabled = false;
     document.getElementById("descargar_instancia_btn").disabled = false;
     document.getElementById("descargar_modelo_btn").disabled = false;
     document.getElementById("eliminar_modelo_btn").disabled = false;
+    document.getElementById("mostrar_grafica_modelo_btn").disabled = false;
+    
     
     //Buscamos si existe un log ya con el contenido
-    var log = logs.find(function(log) {
-      return log.instancia_id === instancia._id;
-    });
+    modelo_seleccionado_actualmente = logs.find(function(seleccionado) {
+      return seleccionado.instancia_id === instancia._id; 
+    }); 
     
-    if (log) {
+    
+    if (modelo_seleccionado_actualmente) {
       //logElemento.style.display = 'block';
-      document.getElementById("nombre_modelo").textContent = log.nombre;
-      document.getElementById("fecha_modelo").textContent = log.fecha;
-    // Actualizar el elemento con el contenido del log, si se encuentra
-      document.getElementById("contenido_modelo").value= log.contenido;
+      document.getElementById("nombre_modelo").textContent = modelo_seleccionado_actualmente.nombre;
+      
+      document.getElementById("fecha_modelo").textContent = modelo_seleccionado_actualmente.fecha;
+
+      document.getElementById("beneficio_modelo").textContent = modelo_seleccionado_actualmente.valor_beneficio;
+
+    
+      document.getElementById("objetos_seleccionados_modelo").textContent= modelo_seleccionado_actualmente.objetos_seleccionados;
+      document.getElementById("momentos_seleccionados_modelo").textContent= modelo_seleccionado_actualmente.momento_seleccionado;
+      document.getElementById("contenido_modelo").value= modelo_seleccionado_actualmente.resumen_contenido;
+
     } else {
       document.getElementById("nombre_modelo").textContent = "<No se ha ejecutado el modelo para esta instancia>";
       document.getElementById("fecha_modelo").textContent = "";
-    // Actualizar el elemento con el contenido del log, si se encuentra
+      document.getElementById("beneficio_modelo").textContent = "";
+
+
+    
+      document.getElementById("objetos_seleccionados_modelo").textContent= "";
+      document.getElementById("momentos_seleccionados_modelo").textContent= "";
       document.getElementById("contenido_modelo").value= "";
       document.getElementById("descargar_modelo_btn").disabled = true;
       document.getElementById("eliminar_modelo_btn").disabled = true;
+      document.getElementById("mostrar_grafica_modelo_btn").disabled = true;
     }
-    
   }
+  
 </script>
 
 <!--Evento para eliminar instancias-->
@@ -203,7 +320,7 @@
       window.location.href = newUrl;
   });
 </script>
-<!--Evento descargar instancia-->
+
 
 <!--Evento para eliminar modelos-->
 <script>
@@ -214,8 +331,8 @@
   });
 </script>
 
-
-<script>//REVISAR
+<!--Evento descargar instancia-->
+<script>
   document.getElementById('descargar_instancia_btn').addEventListener('click', function() {
     //obtenemos nombre y contenido de la instancia seleccionada
     nombre = document.getElementById('nombre_instancia').value
@@ -280,7 +397,7 @@
     var flashMessages = document.querySelectorAll('[id^="mensaje_flash_temporal_"]');
     
     flashMessages.forEach(function(flashMessage) {
-      // Oculta cada mensaje después de 2 segundos (2000 ms)
+      // Oculta cada mensaje después de x ms
       setTimeout(function() {
           flashMessage.classList.add('hidden');
       }, 6000);
@@ -288,40 +405,157 @@
       // Elimina cada mensaje del DOM después de la transición
       setTimeout(function() {
           flashMessage.parentNode.removeChild(flashMessage);
-      }, 6500); // 3000 ms + 500 ms para la transición
+      }, 6500); // x ms + 500 ms para la transición
     });
     //Buscamos notificación de finalización del modelo
     var messagefinalizacion = document.getElementById('mensaje_flash_temporal');
   };
 </script>
 
-<!--Evento al pulsar el botón de probar el modelo-->
+<!--Evento al pulsar el botón de ejecutar el modelo-->
 
 <script>
-  document.getElementById('probar_btn').addEventListener('click', function(event) {
-      // Evitar el envío del formulario para pruebas
-      //event.preventDefault();
+  document.getElementById('ejecutar_btn').addEventListener('click', function(event) {
+    // Mostrar modal de forma programática y no cerrable
+    const modalElement = document.getElementById('modalCarga');
+    const modal = new bootstrap.Modal(modalElement, {
+      backdrop: 'static',  // impide cierre al hacer clic fuera
+      keyboard: false      // impide cierre con Escape
+    });
 
-      // Desactivar el botón temporalmente cuidado, no se puede enviar el formulario si el botón se encuentra disabled.
-      //document.getElementById("probar_btn").disabled = true;
+    // Mostrar el modal
+    modal.show();
 
-      // Generar el mensaje flash
-      const flashContainer = document.getElementById('flash_messages');
-      const flashMessage = document.createElement('div');
-      flashMessage.className = 'alert alert-info';
-      flashMessage.role = 'alert';
-      flashMessage.id = 'mensaje_flash_ejecutandose';
-      flashMessage.innerText = 'Se está ejecutando el modelo, puede tardar varios minutos, por favor sea paciente';
+    // Guardar referencia para poder cerrarlo después si es necesario
+    window.modalCargaInstancia = modal;
 
-      flashContainer.appendChild(flashMessage);
   });
 </script>
+
+<!-- Encargado de hacer que se quede seleccionado la instancia seleccionada al recargar la página al ejecutar el modelo-->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  let ins_seleccionada_al_cargar = {{ instancia_anteriormente_seleccionada | tojson | default('null', true) }};
+
+  if (ins_seleccionada_al_cargar) {
+    console.log("Instancia previamente seleccionada:", ins_seleccionada_al_cargar._id);
+    seleccionarInstancia(ins_seleccionada_al_cargar);
+
+    let articulos = document.querySelectorAll('.instancia_elemento');
+    let instancia_seleccionado_actualmente_elemento = null;
+
+    for (let articulo of articulos) {
+      let onclickAttr = articulo.getAttribute('onclick');
+      const match = onclickAttr.match(/"_id"\s*:\s*"([^"]+)"/);
+
+      if (match) {
+        const id = match[1];
+        if (id === ins_seleccionada_al_cargar._id) {
+          instancia_seleccionado_actualmente_elemento = articulo;
+          break;
+        }
+      }
+    }
+
+    if (instancia_seleccionado_actualmente_elemento) {
+      // Primero eliminamos la clase 'active' de todos
+      articulos.forEach(el => el.classList.remove('active'));
+
+      // Luego la agregamos al seleccionado
+      instancia_seleccionado_actualmente_elemento.classList.add('active');
+      console.log("Se encontro instancia:");
+      console.log(instancia_seleccionado_actualmente_elemento);
+    }
+  }
+  });
+</script>
+
+
+<script>
+  let instancia_de_grafica = null;
+
+  var modal = document.getElementById('grafico_modal');
+  modal.addEventListener('shown.bs.modal', function () {
+    // Actualizamos el título
+    document.getElementById("grafico_modal_label").textContent = modelo_seleccionado_actualmente.nombre;
+
+    // Obtenemos los datos
+    var objetos_seleccionados = modelo_seleccionado_actualmente["objetos_seleccionados"];
+    var momentos = modelo_seleccionado_actualmente["momento_seleccionado"];
+
+    var datos = objetos_seleccionados.map((obj, index) => ({
+      x: momentos[index],
+      y: obj
+    }));
+
+    // Si hay una gráfica anterior, la destruimos
+    if (instancia_de_grafica !== null) {
+      instancia_de_grafica.destroy();
+    }
+
+    // Creamos una nueva gráfica
+    var config = {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Momento de selección vs Objeto seleccionado',
+          data: datos,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Momento Seleccionado'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Objeto Seleccionado'
+            },
+            ticks: {
+              precision: 0
+            }
+          }
+        }
+      }
+    };
+
+    // Guardamos la nueva instancia en la variable global
+    instancia_de_grafica = new Chart(document.getElementById('miGrafica'), config);
+  });
+</script>
+
+<!--Reordenamiento en lugar decambiar el contenido aquí mismo recargamos la página con el contenido nuevo-->
+<script>
+    function ordenarPor(criterio_orden) {
+      // Redirige a la ruta con el parámetro ?criterio=nombre o ?criterio=fecha, (argumentos extras que son recibidos y revisados por el back)
+      window.location.href = "/?criterio_orden=" + encodeURIComponent(criterio_orden)     
+    }
+</script>
+
+
+<!-- Bootstrap CSS Me gustan algunos cambios otros no, ya miraré en el futuro una hoja de estilo-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+
 
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Bootstrap JS Bundle (con Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </html>
 {% endblock content %}

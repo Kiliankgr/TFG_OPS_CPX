@@ -32,7 +32,7 @@ void OPS_instance_t::write_statistics_hdr(ostream& os) const
 }
 
 void OPS_instance_t::write_statistics(ostream& os) const
-{
+{    
     os << id_[NAME] << "\t";
 }
 
@@ -136,7 +136,8 @@ void OPS_instance_t::set(const OPS_instance_t& O)
     T_            = O.T_;
     b_            = O.b_;
 	
-	make_Kj();	}
+	make_Kj();	
+}
 
 void OPS_instance_t::make_Kj(void)
 {
