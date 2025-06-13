@@ -54,7 +54,7 @@ def mostrar_instancias():
     form_mod_instancia = Mod_Instancia_Form()
     form_instancia_modelo = Instancia_Modelo_Form()
     # Modificar Instancias
-    if request.method == "POST":        #Nota revisar ya que probablemente si vamos a mantener los modelos con las instancia, el post deberá de detectar la solicitud si es de mod contenido instancia, o guardar modelo resultante
+    if request.method == "POST":        
         #Diferenciamos las diferentes solicitudes post
         if "ejecutar_btn" in request.form :
             
@@ -63,22 +63,21 @@ def mostrar_instancias():
             
             for instancia in instancias:
                 
-                #print("ID: " + instancia["_id"], )
                 if instancia["_id"] == id_instancia_seleccionada:
                     instancia_anteriormente_seleccionada = instancia
                     print("routes.py, instancia_seleccionada previa _nombre:" + instancia_anteriormente_seleccionada["nombre"] + ", ")
                     print(type(instancia_anteriormente_seleccionada))
-                    #flash("Se está ejecutando el modelo, porfavor tenga paciencia, el modelo puede tardar unos minutos. Una vez acabado se guardará en la instancia seleccionada","warning")
+                    
                     #Creamos ficheros temporales
-                    f_tmp = open(RUTA_FICHERO_TMP, "w") #revisar si son nesesarios crearlo antes
-                    # Escribir el diccionario en un fichero
+                    f_tmp = open(RUTA_FICHERO_TMP, "w") 
+                    
                     with open(RUTA_INSTANCIA_TMP, 'w') as file:
                         json.dump(instancia["contenido"], file, indent=2)
-                    f_salida = open(RUTA_SALIDA_TMP, "w") #revisar si son nesesarios crearlo antes
+                    f_salida = open(RUTA_SALIDA_TMP, "w") 
                     f_tmp.close()
                     f_salida.close()        
 
-                    f_resultados = open(RUTA_RESULTADOS_TMP, "w") #revisar si son nesesarios crearlo antes         
+                    f_resultados = open(RUTA_RESULTADOS_TMP, "w") 
                     f_resultados.close()
 
                     ejecutar_modelo(instancia["_id"],RUTA_AL_MODELO, RUTA_FICHERO_TMP, RUTA_INSTANCIA_TMP, RUTA_SALIDA_TMP, RUTA_RESULTADOS_TMP)
@@ -92,7 +91,7 @@ def mostrar_instancias():
         
         instancia_anteriormente_seleccionada_id = modificar_instancia(form_mod_instancia)
         
-        #volvemos a obtener las instancias, ya que la informacion a cambiado, tal vez a futuro solo mod
+        #volvemos a obtener las instancias, ya que la informacion a cambiado
         instancias = []
         if(criterio_orden == 'nombre'):
             for instancia in db.Instancias.find().sort([("nombre", 1)]):
@@ -114,9 +113,6 @@ def mostrar_instancias():
                 if(instancia["_id"] == instancia_anteriormente_seleccionada_id):
                     instancia_anteriormente_seleccionada = instancia
         logs = obtener_logs()          
-    
-    #instance_id = request.form.get('id_instancia_a_eliminar')
-    #print("Bueno veamos si esto se cambia bien" + instancia_anteriormente_seleccionada["nombre"])
     return render_template('instancias.html', instancias= instancias ,form_mod_instancia = form_mod_instancia, form_instancia_modelo = form_instancia_modelo, logs = logs, instancia_anteriormente_seleccionada=instancia_anteriormente_seleccionada)
 
 def obtener_logs():
@@ -155,7 +151,7 @@ def modificar_instancia(form_mod_instancia):
         }})
         
         #Mensaje al usuario
-        flash("Instancia modificada correctamente", "success") # No veo que se muestre el mensaje revisar
+        flash("Instancia modificada correctamente", "success")
 
         # Eliminamos el modelo referente a la instancia en cuestión si existe, para garantizar la correlacion de los datos
         eliminar_modelo_si_existe(identificador)
@@ -195,29 +191,25 @@ def add_instancias():
                 "contenido" : contenido_json
             })            
             #Mensaje al usuario
-            flash("Instancia añadida correctamente", "success") # No veo que se muestre el mensaje revisar
+            flash("Instancia añadida correctamente", "success") 
         except json.JSONDecodeError as e:
             # Manejo de errores en caso de que el contenido no sea un JSON válido
             flash(f"Error, el contenido no tiene el formato JSON correcto:\n {e}", "error")
-        
-        
-        
+               
         # return redirect("/")
     else:
         form_add_instancia = Add_Instancia_Form()
     return render_template('add_instancias.html', form_add_instancia = form_add_instancia) 
-#### Diria que probar intancias template y todo sobran, ya que lo tengo todo dentro de la ruta instancia y instancias.html----------------------------------------------------------
 
 
 #Función que ejecutará el modelo
 def ejecutar_modelo(instancia_id, ruta_del_programa, *args):
-    print("Vamos a ejecutar el modelo")
     #se la pasamos al modelo
     try:
         # Ejecutar el programa con los argumentos dados
         
         resultado = subprocess.run([ruta_del_programa, *args], capture_output=True, text=True)
-        #resultado = subprocess.run(["pwd"], shell=True, capture_output=True, text=True)
+        
         print("Argumentos:" + str(resultado.args))
         #comprobamos que se ha generado la solución si el fichero está vacío mandamos error
         print("Fichero: " + str(args[2]))
@@ -270,23 +262,16 @@ def guardar_resultados_modelo(instancia_id, ruta_fichero_contenido, ruta_fichero
     try:
         #obtenemos la información de la instancia utilizada
         object_id = ObjectId(instancia_id)
-        #instancia_usada =  db.Instancias.find({"_id": object_id})
         instancia_usada = db.Instancias.find_one({"_id": object_id})
         
         #transformamos el contenido del fichero a JSON
         with open(ruta_fichero_contenido, 'r') as file:
             resumen_contenido = file.read().splitlines()
         
-        
         nombre_modelo = instancia_usada.get("nombre") + "_" + str(instancia_usada.get("fecha_texto"))
-        
-        
-        
-        #contenido_json = json.loads(add_instancia_contenido)
         fecha_actual = time.strftime('%d-%m-%Y_%H:%M:%S')   
         #pymongo flask, insertamos en la coleccion Instancias
         
-
         with open(ruta_fichero_resultados, 'r') as archivo:
             resultados = json.load(archivo)
 
@@ -324,7 +309,6 @@ def eliminar_instancia(id):
     print("Eliminar instancia:" + str(id))            
     try:
 
-        # Convertir id a ObjectId
         object_id = ObjectId(id)
         # Eliminar el documento cuyo _id sea igual al object_id
         result = db['Instancias'].find_one_and_delete({"_id": object_id})

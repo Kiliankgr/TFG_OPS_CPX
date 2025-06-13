@@ -108,8 +108,6 @@
         <!-- Sección de Contenido de la Instancia -->
         <div class="col-md-6"  id="columna_contenido_instancias">
             <div class="content-section" id = "content-section_intancias" >
-                <!--<h3 id="nombre_instancia">Nombre</h3>-->
-                
                 <form action="" method="POST">
                   {{ form_mod_instancia.csrf_token() }}
                   <fieldset class="form-group" style="height: 100%;">
@@ -134,7 +132,6 @@
         <!-- Botones -->
         <div class="col-md-2">
           <ul class="list-group">
-              <!--<a type="button" href="/add_instancias" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</a>-->
               <button type="button" onclick="window.location.href='/add_instancias'" class="btn btn-primary mb-2" data-bs-toggle="tooltip" title="Se irá al menú para crear una nueva instancia" >Nueva</button>
               <!--Ejecución del modelo-->
               <form id="ejecutar_modelo_form" method="POST" action="">
@@ -147,9 +144,6 @@
               <!--Detector de alertas-->
               {% for category, message in get_flashed_messages(with_categories=true) %}
               <div class="row">
-                <!--<div class="alert alert-info" role = "alert" id="mensaje_flash">
-                  {{ message }}
-                </div>-->
                 {% if category != 'warning'%}
                 <div class="alert alert-{{ 'danger' if category == 'error' else 'info' }}" role="alert" id="mensaje_flash_temporal_{{ loop.index }}">
                   {{ message }}
@@ -262,7 +256,6 @@
     // Actualizar el contenido del formulario
     document.getElementById("id_instancia_a_ejecutar").value = instancia._id; 
     document.getElementById("identificador_seleccionado").value = instancia._id; 
-    //document.getElementById("nombre_instancia").textContent = instancia.nombre; //Probablemente modifique la etiqueta de nombre y por ende esta linea de aquí
     document.getElementById("nombre_instancia").value = instancia.nombre;
     document.getElementById("contenido_instancia").value = JSON.stringify(instancia.contenido, null, 2); 
     // modificamos el valor en caso de querer ejecutar la instancia
@@ -288,8 +281,7 @@
       document.getElementById("fecha_modelo").textContent = modelo_seleccionado_actualmente.fecha;
 
       document.getElementById("beneficio_modelo").textContent = modelo_seleccionado_actualmente.valor_beneficio;
-
-    
+   
       document.getElementById("objetos_seleccionados_modelo").textContent= modelo_seleccionado_actualmente.objetos_seleccionados;
       document.getElementById("momentos_seleccionados_modelo").textContent= modelo_seleccionado_actualmente.momento_seleccionado;
       document.getElementById("contenido_modelo").value= modelo_seleccionado_actualmente.resumen_contenido;
@@ -393,7 +385,6 @@
   window.onload = function() {
     // Selecciona el mensaje flash
     
-    //var flashMessage = document.getElementById('mensaje_flash_temporal');
     var flashMessages = document.querySelectorAll('[id^="mensaje_flash_temporal_"]');
     
     flashMessages.forEach(function(flashMessage) {
@@ -413,7 +404,6 @@
 </script>
 
 <!--Evento al pulsar el botón de ejecutar el modelo-->
-
 <script>
   document.getElementById('ejecutar_btn').addEventListener('click', function(event) {
     // Mostrar modal de forma programática y no cerrable

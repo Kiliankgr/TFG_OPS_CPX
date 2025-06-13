@@ -23,11 +23,6 @@
                         <label class="custom-file-label" for="customFileLang" id = "nombre_fichero">Seleccionar Archivo</label>
                         <input type="file" class="custom-file-input" id="formFile" lang="es" data-bs-toggle="tooltip" title="Permite rellenar los campos con la información procedente de un fichero">                        
                       </div>
-                      <!-- otra forma menos vistosa a mi parecer
-                      <div class="mb-3">
-                        <input class="form-control" type="file" id="formFile" data-bs-toggle="tooltip" title="Permite rellenar los campos con la información procedente de un fichero">
-                      </div>
-                      -->
                     </div>
             </div>
               
@@ -56,13 +51,6 @@
           // De esta manera mostramos el mensaje como una alerta, para javascript hay que transformar el mensaje a un json y luego asegurar la inserción html
           alert({{ message | tojson | safe }});
         </script>
-        <!--Si lo quisieramos añadir como un simple texto de aviso abajo
-        <div class="row">
-          <div class="alert alert-info" role = "alert">
-            {{ message }}
-          </div>
-        </div>
-        -->
       {% endfor %}
       
 
@@ -77,16 +65,13 @@
           document.getElementById("nombre_fichero").textContent = fichero.name;
           document.getElementById("nombre_instancia").value = fichero.name.split(".")[0];
           // Creamos un lector de archivos
-          var lector = new FileReader();
-          
+          var lector = new FileReader();         
           // Definimos la función de lectura del fichero
           lector.onload = function(e) {
               // Obtenemos el contenido del fichero
               var contenido_fichero = e.target.result;              
               document.getElementById("contenido_instancia").value = contenido_fichero;
           };
-          
-          // Leer el fichero como texto
           lector.readAsText(fichero);
       } else {
           console.log('No se seleccionó ningún fichero.');

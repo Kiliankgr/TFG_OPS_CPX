@@ -11,7 +11,7 @@ load_dotenv()
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") 
-app.config["MONGO_URI"] = os.getenv("MONGO_URI") #debríamos ocultar a futuro la contraseña
+app.config["MONGO_URI"] = os.getenv("MONGO_URI") 
 
 
 client = MongoClient(app.config["MONGO_URI"], server_api=ServerApi('1'))
