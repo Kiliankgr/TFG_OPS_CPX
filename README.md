@@ -23,10 +23,6 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 * **python3 -m pip install python-dotenv Flask-PyMongo Flask-PyMongo pymongo[srv]**
 
 
-## IDEAS
-
-* Añadir transiciones o efectos a la hora de seleccionar ciertos elementos
-
 ## REVISION
 
 * Arreglar base de datos tiempo cambiar a coste beneficio (hecho)
@@ -43,10 +39,9 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 * Ajustar el overflow del nombre del modelo al recuadro.(hecho)
 * Solucionar espacios entre líneas en la información del contenido (Se ven espacios más grandes entre líneas).(hecho)
 
-* Al probar la instancia, revisar el reenvío de formulario, que mantenga la instancia seleccionada si hubiese una (Importante, pero no realizar ahora). (intentandolo, funciona se conserva la información, falta por conseguir que visualmente se siga viendo seleccionado/clickado el elemento)
-* Sustituir el contenido de About por un manual, que explique el funcionamiento de la aplicación.
-* Añadir una guía de usuario
-* Permitir un modo oscuro a la web(No tan prioritario).
+* Al probar la instancia, revisar el reenvío de formulario, que mantenga la instancia seleccionada si hubiese una (Importante, pero no realizar ahora). (Hecho)
+* Sustituir el contenido de About por un manual, que explique el funcionamiento de la aplicación.(Hecho)
+* Permitir un modo oscuro a la web(Hecho).
 * Número de línea, al ver el contenido (Muy opcional, ya para el final)
 
 
@@ -56,6 +51,7 @@ Se usará MongoDB, con PyMongo el cual da servicio a nuestra Web hecha en Flask
 * Se le pasan el fichero con la instancia y el fichero con la salida, así como un fichero temporal. 
 * El programa genera un objeto con la información de la instancia con el fichero de instancia (OPS_instance)
 * Dicho objeto se le entrega al OPS_input, donde genera la estructura a partir de la información
+* Posteriormente ejecuta el modelo OPS con la información recaba y esta es volcada.
 
 
 ## References
