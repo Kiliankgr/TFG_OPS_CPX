@@ -253,7 +253,7 @@ def ejecutar_modelo(instancia_id, ruta_del_programa, *args):
         guardar_resultados_modelo(instancia_id, str(args[2]), str(args[3]))
         #Mensaje al usuario
         flash("Modelo  ejecutado correctamente y guardado en la instancia correspondiente", "success") 
-        return resultado.stdout  # O puedes retornar resultado si quieres incluir stderr y más información
+        return resultado.stdout  
     except subprocess.CalledProcessError as e:
         # Manejar el error si el programa falla
         print("fallo")

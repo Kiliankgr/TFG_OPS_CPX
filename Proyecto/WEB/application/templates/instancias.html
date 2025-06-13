@@ -161,24 +161,6 @@
         </div>
     
     </div>
-    <!--Detector de alertas-->
-    <div class="row mt-1 ml-3">
-      {% for category, message in get_flashed_messages(with_categories=true) %}
-      <div class="row">
-        <!--<div class="alert alert-info" role = "alert" id="mensaje_flash">
-          {{ message }}
-        </div>-->
-
-        {% if category == 'warning'%}
-        <div class="alert alert-{{ 'warning' if category == 'warning' else 'info' }}" role="alert" id="mensaje_flash_ejecucion">
-          {{ message }}
-        </div>
-        {% endif %}
-        
-      </div>
-      {% endfor %}
-      <div id="flash_messages"></div> <!--Puesto por el front si ejecución-->
-    </div>
     <div class="row mt-2" >
       <!--Modelo-->
       <div class="col-md-10">
@@ -338,7 +320,7 @@
       window.location.href = newUrl;
   });
 </script>
-<!--Evento descargar instancia-->
+
 
 <!--Evento para eliminar modelos-->
 <script>
@@ -349,7 +331,7 @@
   });
 </script>
 
-
+<!--Evento descargar instancia-->
 <script>
   document.getElementById('descargar_instancia_btn').addEventListener('click', function() {
     //obtenemos nombre y contenido de la instancia seleccionada
